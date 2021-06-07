@@ -1,0 +1,3 @@
+[console_scripts]
+kibbe = kib.kib:cli
+

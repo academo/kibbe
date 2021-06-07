@@ -1,0 +1,16 @@
+README.md
+setup.py
+kibbe/__init__.py
+kibbe/main.py
+kibbe.egg-info/PKG-INFO
+kibbe.egg-info/SOURCES.txt
+kibbe.egg-info/dependency_links.txt
+kibbe.egg-info/entry_points.txt
+kibbe.egg-info/requires.txt
+kibbe.egg-info/top_level.txt
+kibbe.egg-info/kib.egg-info/PKG-INFO
+kibbe.egg-info/kib.egg-info/SOURCES.txt
+kibbe.egg-info/kib.egg-info/dependency_links.txt
+kibbe.egg-info/kib.egg-info/entry_points.txt
+kibbe.egg-info/kib.egg-info/requires.txt
+kibbe.egg-info/kib.egg-info/top_level.txt
