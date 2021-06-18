@@ -10,7 +10,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'kibbe = kibbe.main:cli',
+            'kibbe = src.main:cli',
         ],
     },
 )

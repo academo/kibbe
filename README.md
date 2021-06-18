@@ -6,7 +6,7 @@ Note: Everything in this readme and project assumes python 3
 
 - Install python3
 - Install [pip](https://pip.pypa.io/en/stable/installing/sure)
-- Install [virtualenv](https://virtualenv.pypa.io/en/latest/installation.html) `pip install virtualenv`
+- Install [virtualenv](https://virtualenv.pypa.io/en/latest/installation.html) `pip install virtualenv` or `sudo apt install python3-virtualenv`
 
 Note: In macos is probable you have to run pip using sudo depending on your setup
 
