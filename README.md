@@ -24,3 +24,17 @@ pip install -r requirements.txt
 ```
 
 You should now be able to run `kibbe` in your terminal.
+
+## Run
+
+To run the tool
+
+```bash
+python3 main.py
+```
+
+or simply
+
+```bash
+./main.py
+```
