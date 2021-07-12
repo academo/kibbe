@@ -13,8 +13,6 @@ valid_licenses = ['trial', 'basic', 'gold', 'platinum', 'enterprise']
 @click.option('-u', '--user', default="elastic", help="Username to connect. Default to elastic.")
 def setlicense(license_type, elastic, password, user):
     license_type = license_type.lower()
-    if (license_type not in valid_licenses):
-        raise click.ClickException("Invalid license_type, valid options\n" + str(valid_licenses))
 
     toolInstalled = is_tool('setlicense')
 
