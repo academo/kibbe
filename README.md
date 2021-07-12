@@ -19,9 +19,8 @@ Note: In macos is probable you have to run pip using sudo depending on your setu
 > Note: **Do not use sudo for any of the following commands**
 
 ```bash
-virtualenv venv
-. venv/bin/activate
-pip install --editable .
+. env/bin/activate
+pip install -r requirements.txt
 ```
 
 You should now be able to run `kibbe` in your terminal.
