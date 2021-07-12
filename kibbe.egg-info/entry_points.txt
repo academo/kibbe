@@ -1,3 +1,0 @@
-[console_scripts]
-kibbe = src.main:cli
-
