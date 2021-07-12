@@ -8,9 +8,12 @@ valid_licenses = ['trial', 'basic', 'gold', 'platinum', 'enterprise']
 @click.command(help="""This command is a proxy for @pzl setlicense tool
         https://github.com/elastic/pzl-es-tools""")
 @click.argument('license_type')
-@click.option('-e', '--elastic', default="http://localhost:9200", help="Elastic search host. Default to localhost:9200")
-@click.option('-p', '--password', default="changeme", help="Password to connect. Default to changeme")
-@click.option('-u', '--user', default="elastic", help="Username to connect. Default to elastic.")
+@click.option('-e', '--elastic', default="http://localhost:9200",
+              help="Elastic search host. Default to localhost:9200")
+@click.option('-p', '--password', default="changeme",
+              help="Password to connect. Default to changeme")
+@click.option('-u', '--user', default="elastic",
+              help="Username to connect. Default to elastic.")
 def setlicense(license_type, elastic, password, user):
     license_type = license_type.lower()
 
@@ -24,4 +27,5 @@ def setlicense(license_type, elastic, password, user):
             Make it available in your $PATH and try again.
             """)
 
-    subprocess.run(['setlicense', '-u', user, '-p', password, '-e', elastic, license_type])
+    subprocess.run(['setlicense', '-u', user, '-p',
+                   password, '-e', elastic, license_type])
