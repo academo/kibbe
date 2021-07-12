@@ -14,7 +14,7 @@ install:
 	pip3 install -r requirements.txt
 
 build:
-	./env/bin/pyinstaller kibbe.py --onefile
+	./env/bin/pyinstaller kibbe.py --onefile --exclude-module autopep8 --exclude-module flake8 
 
 clean:
 	rm -rf kibbe.spec
