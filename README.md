@@ -19,18 +19,27 @@ Note: In macos is probable you have to run pip using sudo depending on your setu
 
 > Note: **Do not use sudo for any of the following commands**
 
+### Run make setup to setup dependencies
 ```bash
 make setup
 ```
 
-If you don't want to use make you can manually run
+### Activate the virtualenv for the project
+
+Inside the project:
 
 ```bash
 . env/bin/activate
-pip install -r requirements.txt
+```
+
+When you are done with development you can deactivate the venv with 
+
+```bash
+deactivate
 ```
 
 You should now be able to run `kibbe` in your terminal.
+
 
 ## Run
 
@@ -45,3 +54,7 @@ or simply
 ```bash
 ./kibbe.py
 ```
+
+## Linting and formatting
+
+This project uses autopep8 and flake8 for formatting and linting. Make sure your editor has these tools installed and running.
