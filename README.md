@@ -82,3 +82,12 @@ or simply
 ## Linting and formatting
 
 This project uses autopep8 and flake8 for formatting and linting. Make sure your editor has these tools installed and running.
+
+## Releasing
+
+To release a new version, you need to push a new incremental tag. That will trigger an auto-build and release.
+
+There's a handy script to automate this process in `scripts/increment-version.sh` and you can use make to invoke it:
+
+Minor release: `make minor-release`
+Major release: `make major-relase`

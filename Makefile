@@ -21,3 +21,9 @@ clean:
 	rm -rf kibbe.spec
 	rm -rf build
 	rm -rf dist
+
+minor-release: 
+	./scripts/increment-version.sh -v minor
+	
+major-release: 
+	./scripts/increment-version.sh -v major
