@@ -1,6 +1,7 @@
 import os
 import json
 import subprocess
+from typing import ValuesView
 import click
 from pathlib import PurePath
 
@@ -65,7 +66,10 @@ def find_related_test(file):
 def find_related_plugin_folder(file):
     path = PurePath(file)
 
-    if not path.relative_to('x-pack/plugins'):
+    try:
+        if not path.relative_to('x-pack/plugins'):
+            return ""
+    except ValueError:
         return ""
 
     while not path.match('x-pack/plugins/*'):
