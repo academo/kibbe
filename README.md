@@ -7,6 +7,11 @@ kibbe is a cli tool to ease common tasks when developing plugins for kibana.
 - Give it running permissions `chmod +x kibbe`
 - Add it to your path (e.g. `cp kibbe .local/bin`)
 
+
+## Building it yourself
+
+You can build kibbe yourself, follow the instructions in the "Collaborating" section
+
 # Usage
 
 Run `kibbe --help` to see a list of commands.
