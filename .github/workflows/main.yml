@@ -20,3 +20,4 @@ jobs:
           artifacts: "./dist/*"
           token: ${{ secrets.GITHUB_TOKEN }}
           name: "Latest"
+          tag: ${{ github.run_number }}
