@@ -1,6 +1,7 @@
 import os
 import json
 import subprocess
+import click
 from pathlib import PurePath
 
 
@@ -11,6 +12,11 @@ def is_tool(name):
     from shutil import which
 
     return which(name) is not None
+
+
+def force_kibana_root():
+    if not is_kibana_repo():
+        raise click.ClickException("You must run this command in the root of a kibana repo clone")
 
 
 def is_kibana_repo():
