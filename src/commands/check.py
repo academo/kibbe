@@ -68,6 +68,6 @@ def check(skip_tests, check_types, skip_stylescheck):
 
     if len(fails) > 0:
         click.echo("\n ------ \n")
-        click.echo(colored(">> - Errors found\n", 'red'))
+        click.echo(colored(">> - Errors found running checks:\n", 'red'))
         for fail in fails:
             click.echo('      ❌ - ' + str(fail))
