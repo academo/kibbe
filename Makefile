@@ -1,5 +1,6 @@
 default:
 	make clean
+	python3 -m venv env
 	make setup
 	make build
 
