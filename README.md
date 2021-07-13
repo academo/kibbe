@@ -10,7 +10,7 @@ kibbe is a cli tool to ease common tasks when developing plugins for kibana.
 
 ## Building it yourself
 
-You can build kibbe yourself, follow the instructions in the "Collaborating" section
+You can build kibbe yourself, follow the instructions in the "Contributing" section
 
 # Usage
 
@@ -22,7 +22,7 @@ e.g.:
 
 `kibbe check --help`
 
-# Collaborating - Setting up development
+# Contributing - Setting up development
 
 Note: Everything in this readme and project assumes python 3
 
