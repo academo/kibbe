@@ -43,6 +43,11 @@ def get_modified_files():
 
 def find_related_test(file):
     path = PurePath(file)
+
+    # skip if the file is a test
+    if path.match('*.test.*'):
+        return ""
+
     test_file = path.with_suffix('.test' + path.suffix)
 
     if os.path.isfile(test_file):
