@@ -8,7 +8,7 @@ setup:
 	make install
 
 activate:
-	. env/bin/activate
+	./env/bin/activate
 
 install:
 	pip3 install -r requirements.txt
