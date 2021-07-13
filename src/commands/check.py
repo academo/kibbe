@@ -25,12 +25,12 @@ def check(skip_tests, check_types):
     tests = list(filter(None, tests))
     configs = list(filter(None, configs))
 
-    if check_types:
+    if check_types and len(configs) > 0:
         click.echo(colored('>> Finding tsconfig.json', 'yellow'))
         for config in configs:
             tsconfig = os.path.join(config, 'tsconfig.json')
             if os.path.isfile(tsconfig):
-                click.echo(colored('>>  - Running type_check for ', 'yellow') + colored(tsconfig, 'white'))
+                click.echo(colored('>>  - Running type_check for ', 'cyan') + colored(tsconfig, 'white'))
                 subprocess.run(['node', 'scripts/type_check.js', '--project', tsconfig])
         return
 
