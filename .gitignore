@@ -6,3 +6,4 @@ env
 *.spec
 build
 dist
+.vim
