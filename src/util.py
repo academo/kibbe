@@ -38,14 +38,14 @@ def is_kibana_repo():
 
 
 def get_modified_files():
-    list = ""
+    files = ""
     try:
-        list = subprocess.getoutput('git diff --name-only HEAD')
+        files = subprocess.getoutput('git diff --name-only HEAD')
     except ValueError:
         return []
 
-    list = list.split('\n')
-    return list
+    files = filter(None, files.split('\n'))
+    return list(files)
 
 
 def find_related_test(file):

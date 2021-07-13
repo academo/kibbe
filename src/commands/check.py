@@ -18,6 +18,9 @@ def check(skip_tests, check_types, skip_stylescheck):
 
     modified = get_modified_files()
 
+    if len(modified) == 0:
+        click.echo(colored("Kibbe check only works with uncommited files. Edit some files first", "yellow"))
+
     configs = set()
     tests = set()
     styles = set()
