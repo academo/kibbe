@@ -1,4 +1,23 @@
-# Setting up development
+# About
+kibbe is a cli tool to ease common tasks when developing plugins for kibana.
+
+# Installing
+
+- Download the [latest release](https://github.com/academo/kibbe/releases) from this repository.
+- Give it running permissions `chmod +x kibbe`
+- Add it to your path (e.g. `cp kibbe .local/bin`)
+
+# Usage
+
+Run `kibbe --help` to see a list of commands.
+
+you can run `--help` on any subcommand to get more information about arguments, options and what subcommands do.
+
+e.g.:
+
+`kibbe check --help`
+
+# Collaborating - Setting up development
 
 Note: Everything in this readme and project assumes python 3
 
