@@ -6,6 +6,11 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            name: kibbe-linux-64
+          - os: macos-latest
+            name: kibbe-macos-64
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
@@ -15,12 +20,12 @@ jobs:
           python-version: '3.9.5'
       - name: build
         run: |
-          make build
+          make build name=${{ matrix.name }}
       - name: upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: kibbe-${{ matrix.os }}
-          path: dist/kibbe
+          name: ${{ matrix.wnames }}
+          path: dist/${{ matrix.name }}
   release:
     needs: build
     runs-on: ubuntu-latest
@@ -32,4 +37,10 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R
         working-directory: release-files/
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "./dist/linux/*"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.sha }}
 

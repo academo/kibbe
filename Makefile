@@ -1,10 +1,6 @@
 build-linux:
-	make setup
-	pyinstaller kibbe.py -n kibbe-linux-64 --onefile --exclude-module autopep8 --exclude-module flake8 
 
 build-mac:
-	make setup
-	pyinstaller kibbe.py -n kibbe-mac-64 --onefile --exclude-module autopep8 --exclude-module flake8 
 
 setup:
 	python3 -m venv env
@@ -19,7 +15,7 @@ install:
 
 build:
 	make setup
-	pyinstaller kibbe.py --onefile --exclude-module autopep8 --exclude-module flake8 
+	pyinstaller kibbe.py -n $(name) --onefile --exclude-module autopep8 --exclude-module flake8 
 
 clean:
 	rm -rf kibbe.spec
