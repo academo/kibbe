@@ -1,5 +1,8 @@
 name: Build and release
-on: [push]
+on: 
+  push:
+    tags:
+    - '*'
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -42,5 +45,3 @@ jobs:
         with:
           artifacts: "./release-files/kibbe-linux-64/kibbe-linux-64,./release-files/kibbe-macos-64/kibbe-macos-64"
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.run_number }}
-
