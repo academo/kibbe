@@ -37,4 +37,10 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R
         working-directory: release-files/
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "./release-files/kibbe-linux-64,./release-files/kibbe-macos-64"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.sha }}
 
