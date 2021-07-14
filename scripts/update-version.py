@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
-from pathlib import PurePath
 import configparser
 import subprocess
+import sys
 
 config_file_path = './setup.cfg'
-git_version = subprocess.getoutput('git describe --tags --abbrev=0')[1:]
+git_version = str(sys.argv[1])
+
+if len(git_version) == 0:
+    exit(1)
+
+git_version = git_version[1:]
 
 config = configparser.ConfigParser()
 config.read(config_file_path)

@@ -67,8 +67,13 @@ if [ -z "$NEEDS_TAG" ]; then
   else
     echo "Current Version: $CURRENT_VERSION"
     echo "($VERSION) updating $CURRENT_VERSION to $NEW_TAG"
-    git tag $NEW_TAG
+    # git tag $NEW_TAG
     echo "Tagged with $NEW_TAG"
+    ./scripts/update-version.py $NEW_TAG
+    git add setup.cfg
+    git commit -m "bump version"
+    git tag $NEW_TAG
+    git push origin master
     git push --tags
   fi
 
