@@ -56,4 +56,4 @@ jobs:
         with:
           python-version: '3.9.5'
       - name: release pip
-        run: make release-pip token=${{ secerets.PYPI_TOKEN }}
+        run: make release-pip token=${{ secrets.PYPI_TOKEN }}

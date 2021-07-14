@@ -21,9 +21,11 @@ clean:
 
 minor-release: 
 	./scripts/increment-version.sh -v minor
+	make update-pip-version
 	
 major-release: 
 	./scripts/increment-version.sh -v major
+	make update-pip-version
 	
 update-pip-version:
 	python ./scripts/update-version.py
