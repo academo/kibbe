@@ -1,13 +1,30 @@
 #!/bin/bash
 
 VERSION=""
+OUTPUT=""
+POSITIONAL=()
+while [[ $# -gt 0 ]]; do
+  key="$1"
 
-#get parameters
-while getopts v: flag; do
-  case "${flag}" in
-  v) VERSION=${OPTARG} ;;
+  case $key in
+  -v | --version)
+    VERSION="$2"
+    shift # past argument
+    shift # past value
+    ;;
+  -o | --output)
+    OUTPUT="$2"
+    shift # past argument
+    shift # past value
+    ;;
+  *)                   # unknown option
+    POSITIONAL+=("$1") # save it in an array for later
+    shift              # past argument
+    ;;
   esac
 done
+
+set -- "${POSITIONAL[@]}" # restore positional parameters
 
 #get highest tag number, and add 1.0.0 if doesn't exist
 CURRENT_VERSION=$(git describe --abbrev=0 --tags 2>/dev/null)
@@ -15,7 +32,6 @@ CURRENT_VERSION=$(git describe --abbrev=0 --tags 2>/dev/null)
 if [[ $CURRENT_VERSION == '' ]]; then
   CURRENT_VERSION='1.0.0'
 fi
-echo "Current Version: $CURRENT_VERSION"
 
 #replace . with space so can split into an array
 CURRENT_VERSION_PARTS=(${CURRENT_VERSION//./ })
@@ -38,7 +54,6 @@ fi
 
 #create new tag
 NEW_TAG="$VNUM1.$VNUM2.$VNUM3"
-echo "($VERSION) updating $CURRENT_VERSION to $NEW_TAG"
 
 #get current hash and see if it already has a tag
 GIT_COMMIT=$(git rev-parse HEAD)
@@ -47,9 +62,16 @@ NEEDS_TAG=$(git describe --contains $GIT_COMMIT 2>/dev/null)
 #only tag if no tag already
 #to publish, need to be logged in to npm, and with clean working directory: `npm login; git stash`
 if [ -z "$NEEDS_TAG" ]; then
-  git tag $NEW_TAG
-  echo "Tagged with $NEW_TAG"
-  git push --tags
+  if [ -n "$OUTPUT" ]; then
+    echo $NEW_TAG
+  else
+    echo "Current Version: $CURRENT_VERSION"
+    echo "($VERSION) updating $CURRENT_VERSION to $NEW_TAG"
+    git tag $NEW_TAG
+    echo "Tagged with $NEW_TAG"
+    git push --tags
+  fi
+
 else
   echo "Already a tag on this commit"
 fi
