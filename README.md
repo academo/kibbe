@@ -8,7 +8,7 @@ kibbe is a cli tool to ease common tasks when developing plugins for kibana.
 The easiest way to install and keep kibbe up to date is by using pip.
 
 - Make sure you have python3 installed
-- Install [pip](https://pip.pypa.io/en/stable/installing/sure)
+- Install [pip](https://pip.pypa.io/en/stable/installing/) (you probably don't have to)
 
 Install kibbe:
 
@@ -66,7 +66,7 @@ Note: Everything in this readme and project assumes python 3
 ## Requirements
 
 - Install python3
-- Install [pip](https://pip.pypa.io/en/stable/installing/sure)
+- Install [pip](https://pip.pypa.io/en/stable/installing/) (you probably don't have to)
 - Install [virtualenv](https://virtualenv.pypa.io/en/latest/installation.html) `pip install virtualenv` or `sudo apt install python3-virtualenv`
 - Install make: `sudo apt install make` (linux). `xcode-select --install` (mac)
 
