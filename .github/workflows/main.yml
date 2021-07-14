@@ -1,8 +1,11 @@
-name: Kibbe build release
+name: Build kibbe release
 on: [push]
 jobs:
-  build-binary:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
@@ -12,4 +15,9 @@ jobs:
           python-version: '3.9.5'
       - name: build
         run: |
-          make build-linux
+          make build
+      - name: upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: kibbe-${{ matrix.os }}
+          path: dist/kibbe
