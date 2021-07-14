@@ -1,19 +1,20 @@
 name: Kibbe build release
-on: 
+on:
   push:
-    tags:
-    - '*'
+    branches:
+    - master
 jobs:
   build-binary:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
-      - name: PyInstaller Linux
-        uses: JackMcKew/pyinstaller-action-linux@main
+      - name: Add python
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
         with:
-          path: ./
-      - uses: ncipollo/release-action@v1
-        with:
-          artifacts: "./dist/linux/*"
-          token: ${{ secrets.GITHUB_TOKEN }}
+          python-version: '3.9.5'
+      - name: build
+        run: |
+          make build-linux
