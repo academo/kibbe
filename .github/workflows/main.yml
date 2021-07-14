@@ -1,16 +1,11 @@
 name: Kibbe build release
-on:
-  push:
-    branches:
-    - master
+on: [push]
 jobs:
   build-binary:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
-      - name: Add python
-      - uses: actions/checkout@v2
       - name: Set up Python 3.x
         uses: actions/setup-python@v2
         with:
