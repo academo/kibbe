@@ -1,4 +1,4 @@
-name: Build kibbe release
+name: Build and release
 on: [push]
 jobs:
   build:
@@ -21,3 +21,15 @@ jobs:
         with:
           name: kibbe-${{ matrix.os }}
           path: dist/kibbe
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+      - uses: actions/download-artifact@v2
+        with:
+          path: release-files/
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: release-files/
+
