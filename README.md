@@ -3,6 +3,26 @@ kibbe is a cli tool to ease common tasks when developing plugins for kibana.
 
 # Installing
 
+## Via PIP
+
+The easiest way to install and keep kibbe up to date is by using pip.
+
+- Make sure you have python3 installed
+- Install [pip](https://pip.pypa.io/en/stable/installing/sure)
+
+Install kibbe:
+
+`pip3 install kibbe`
+
+To upgrade
+
+`pip install kibbe --upgrade`
+
+Note: It might be possible you need to run pip with sudo in mac.
+
+
+## Download the binary
+
 - Download the [latest release](https://github.com/academo/kibbe/releases) from this repository.
 - Give it running permissions `chmod +x kibbe`
 - Add it to your path (e.g. `cp kibbe .local/bin`)
