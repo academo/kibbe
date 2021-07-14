@@ -1,12 +1,13 @@
-from pathlib import PurePath
-import subprocess
-from typing import DefaultDict
-import click
 import os
-from termcolor import colored
-import termcolor
+import subprocess
+from pathlib import PurePath
 
-from src.util import find_related_plugin_folder, find_related_test, force_kibana_root, get_modified_files
+import click
+from termcolor import colored
+from click.types import Path
+from src.util import (find_related_plugin_folder, find_related_test,
+                      force_kibana_root, get_modified_files)
+from termcolor import colored
 
 
 @click.command(help="""Run quick checks for your modified files. Useful to run before committing""")
