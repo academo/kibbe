@@ -1,9 +1,9 @@
-import os
 import json
+import os
 import subprocess
-from typing import ValuesView
-import click
 from pathlib import PurePath
+
+import click
 
 
 def is_tool(name):

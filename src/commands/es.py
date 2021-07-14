@@ -1,0 +1,53 @@
+import re
+import subprocess
+
+from termcolor import colored
+from src.config import get_config
+import click
+import tempfile
+from pathlib import Path, PurePath
+
+pathDataRe = re.compile(r"path\.data\s?=", re.IGNORECASE)
+
+
+@click.command(help="Runs elastic search from the current kibana clone")
+@click.option('--data-dir', '-d', type=click.STRING, default="esdata", help="Where this elastic search will store its data")
+@click.option('--no-persist', '-n', default=False, is_flag=True, help="If True will use a disposable data dir. This option will overwrite other options related to data dir.")
+@click.option('-E', multiple=True, help="Additional options to pass to elastic search. `path.data` will be ignored")
+def es(data_dir, no_persist, e):
+    CONFIG_KEY = 'elastic.params'
+    config = get_config()
+    params = []
+    if CONFIG_KEY in config:
+        for (key, value) in config.items(CONFIG_KEY, raw=True):
+            # ignore path.data if this command overwrites it
+            if key == 'path.data':
+                if len(data_dir) > 0:
+                    value = get_data_dir(data_dir, no_persist)
+                else:
+                    value = get_data_dir(value, no_persist)
+
+            params.append(str(key) + '=' + str(value))
+
+    for item in e:
+        item = item.strip()
+        # ignore path.data
+        if pathDataRe.match(item):
+            continue
+        params.append(item)
+
+    final_params = []
+    for param in params:
+        final_params.append('-E')
+        final_params.append(param)
+
+    command = ['node', 'scripts/es', 'snapshot'] + final_params
+    click.echo("Will run elastic search as: " + colored(' '.join(command), 'yellow'))
+    # subprocess.run(command)
+
+
+def get_data_dir(data_dir, no_persist):
+    if no_persist or len(data_dir) == 0:
+        return tempfile.mkdtemp(suffix='kibbe')
+
+    return str(Path(data_dir).resolve())
