@@ -10,7 +10,7 @@ from src.util import (find_related_plugin_folder, find_related_test,
 from termcolor import colored
 
 
-@click.command(help="""Run quick checks for your modified files. Useful to run before committing""")
+@click.command(help="""Runs quick checks for your modified files. Useful to run before committing""")
 @click.option('--skip-tests', default=False, help="Skip running tests", is_flag=True)
 @click.option('--skip-stylescheck', default=False, help="Skip running styles check", is_flag=True)
 @click.option('--check-types', default=False, help="Runs Typescript types check (if relevant)", is_flag=True)
