@@ -4,10 +4,8 @@ from pathlib import PurePath
 
 import click
 from termcolor import colored
-from click.types import Path
 from src.util import (find_related_plugin_folder, find_related_test,
                       force_kibana_root, get_modified_files)
-from termcolor import colored
 
 
 @click.command(help="""Runs quick checks for your modified files. Useful to run before committing""")
