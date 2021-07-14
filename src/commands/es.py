@@ -5,7 +5,7 @@ from termcolor import colored
 from src.config import get_config
 import click
 import tempfile
-from pathlib import Path, PurePath
+from pathlib import Path
 
 pathDataRe = re.compile(r"path\.data\s?=", re.IGNORECASE)
 
@@ -15,6 +15,32 @@ pathDataRe = re.compile(r"path\.data\s?=", re.IGNORECASE)
 @click.option('--no-persist', '-n', default=False, is_flag=True, help="If passed will use a disposable data dir. This option will overwrite other options related to data dir.")
 @click.option('-E', multiple=True, help="Additional options to pass to elastic search. `path.data` will be ignored")
 def es(data_dir, no_persist, e):
+
+    params = process_params(data_dir, no_persist)
+
+    # additional -E params
+    for item in e:
+        item = item.strip()
+        # ignore path.data
+        if pathDataRe.match(item):
+            continue
+        params.append(item)
+
+    command = get_command(params)
+    click.echo("Will run elastic search as: " + colored(' '.join(command), 'yellow'))
+    subprocess.run(command)
+
+
+def get_command(params):
+    final_params = []
+    for param in params:
+        final_params.append('-E')
+        final_params.append(param)
+
+    return ['node', 'scripts/es', 'snapshot'] + final_params
+
+
+def process_params(data_dir, no_persist):
     CONFIG_KEY = 'elastic.params'
     config = get_config()
     params = []
@@ -32,21 +58,7 @@ def es(data_dir, no_persist, e):
             else:
                 params.append(str(key))
 
-    for item in e:
-        item = item.strip()
-        # ignore path.data
-        if pathDataRe.match(item):
-            continue
-        params.append(item)
-
-    final_params = []
-    for param in params:
-        final_params.append('-E')
-        final_params.append(param)
-
-    command = ['node', 'scripts/es', 'snapshot'] + final_params
-    click.echo("Will run elastic search as: " + colored(' '.join(command), 'yellow'))
-    # subprocess.run(command)
+    return params
 
 
 def get_data_dir(data_dir, no_persist):
