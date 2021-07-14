@@ -24,7 +24,7 @@ jobs:
       - name: upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.wnames }}
+          name: ${{ matrix.name }}
           path: dist/${{ matrix.name }}
   release:
     needs: build
@@ -37,10 +37,4 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R
         working-directory: release-files/
-      - name: Create release
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "./dist/linux/*"
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.sha }}
 
