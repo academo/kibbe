@@ -18,6 +18,7 @@ install:
 	pip3 install -r requirements.txt
 
 build:
+	make setup
 	pyinstaller kibbe.py --onefile --exclude-module autopep8 --exclude-module flake8 
 
 clean:
