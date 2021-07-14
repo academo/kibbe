@@ -29,7 +29,7 @@ Note: It might be possible you need to run pip with sudo in mac.
 
 ## Running it on MacOs
 
-The recommended way to install kibbe in macos is via pip
+The recommended way to install kibbe in macos is via pip. If you use pip please isgnore this.
 
 Kibbe is originally developed in Linux, also build and fully compatible with Mac but the release files are not signed with an apple certificate as they [cost up to 100 dollars](https://developer.apple.com/support/compare-memberships/).
 
