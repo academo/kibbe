@@ -22,6 +22,12 @@ e.g.:
 
 `kibbe check --help`
 
+## Configuration file
+
+Some kibbe subcommands can use persistent parameters from a configuration file.
+
+The configuration file is read from ~/.kibbe and it should follow the format in [the configuration file example](https://github.com/academo/kibbe/blob/master/kibbe-conf-example)
+
 # Contributing - Setting up development
 
 Note: Everything in this readme and project assumes python 3
