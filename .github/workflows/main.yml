@@ -45,3 +45,15 @@ jobs:
         with:
           artifacts: "./release-files/kibbe-linux-64/kibbe-linux-64,./release-files/kibbe-macos-64/kibbe-macos-64"
           token: ${{ secrets.GITHUB_TOKEN }}
+  release-pip:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9.5'
+      - name: release pip
+        run: make release-pip token=${{ secerets.PYPI_TOKEN }}

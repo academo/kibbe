@@ -1,7 +1,3 @@
-build-linux:
-
-build-mac:
-
 setup:
 	python3 -m venv env
 	make activate
@@ -15,6 +11,7 @@ install:
 
 build:
 	make setup
+	pip3 install pyinstaller
 	pyinstaller kibbe.py -n $(name) --onefile --exclude-module autopep8 --exclude-module flake8 
 
 clean:
@@ -27,3 +24,10 @@ minor-release:
 	
 major-release: 
 	./scripts/increment-version.sh -v major
+	
+publish-pip:
+	make clean
+	make setup
+	pip3 install twine
+	python3 setup.py sdist
+	twine upload -u __token__ -p $(token) --disable-progress-bar --skip-existing  --non-interactive dist/*
