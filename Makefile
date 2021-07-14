@@ -25,6 +25,12 @@ minor-release:
 major-release: 
 	./scripts/increment-version.sh -v major
 	
+update-pip-version:
+	python ./scripts/update-version.py
+	git add setup.cfg
+	git commit -m "bump version"
+	git push origin master
+	
 publish-pip:
 	make clean
 	make setup
