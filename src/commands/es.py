@@ -27,7 +27,10 @@ def es(data_dir, no_persist, e):
                 else:
                     value = get_data_dir(value, no_persist)
 
-            params.append(str(key) + '=' + str(value))
+            if len(value) > 0:
+                params.append(str(key) + '=' + str(value))
+            else:
+                params.append(str(key))
 
     for item in e:
         item = item.strip()
