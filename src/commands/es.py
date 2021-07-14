@@ -10,9 +10,9 @@ from pathlib import Path, PurePath
 pathDataRe = re.compile(r"path\.data\s?=", re.IGNORECASE)
 
 
-@click.command(help="Runs elastic search from the current kibana clone")
-@click.option('--data-dir', '-d', type=click.STRING, default="esdata", help="Where this elastic search will store its data")
-@click.option('--no-persist', '-n', default=False, is_flag=True, help="If True will use a disposable data dir. This option will overwrite other options related to data dir.")
+@click.command(help="Runs elastic search from the current kibana clone. It will use parameters from the ~/.kibbe [elastic.params] section.")
+@click.option('--data-dir', '-d', type=click.STRING, default="esdata", help="Path where this elastic search will store its data (path.data)")
+@click.option('--no-persist', '-n', default=False, is_flag=True, help="If passed will use a disposable data dir. This option will overwrite other options related to data dir.")
 @click.option('-E', multiple=True, help="Additional options to pass to elastic search. `path.data` will be ignored")
 def es(data_dir, no_persist, e):
     CONFIG_KEY = 'elastic.params'

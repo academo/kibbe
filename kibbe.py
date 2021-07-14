@@ -1,3 +1,3 @@
 #!/usr/bin/env python3
 from src import main
-main.sdfsdfd()
+main.cli()
