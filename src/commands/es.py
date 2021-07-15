@@ -13,10 +13,15 @@ pathDataRe = re.compile(r"path\.data\s?=", re.IGNORECASE)
 @click.command(help="Runs elastic search from the current kibana clone. It will use parameters from the ~/.kibbe [elastic.params] section.")
 @click.option('--data-dir', '-d', type=click.STRING, default="esdata", help="Path where this elastic search will store its data (path.data)")
 @click.option('--no-persist', '-n', default=False, is_flag=True, help="If passed will use a disposable data dir. This option will overwrite other options related to data dir.")
+@click.option('--license', '-l', help="The license to use for this elastic. e.g trial")
 @click.option('-E', multiple=True, help="Additional options to pass to elastic search. `path.data` will be ignored")
-def es(data_dir, no_persist, e):
+def es(data_dir, no_persist, e, license):
 
-    params = process_params(data_dir, no_persist)
+    e_params = process_params(data_dir, no_persist)
+    extra_params = []
+
+    if len(license) > 0:
+        extra_params = ['--license', license]
 
     # additional -E params
     for item in e:
@@ -24,20 +29,20 @@ def es(data_dir, no_persist, e):
         # ignore path.data
         if pathDataRe.match(item):
             continue
-        params.append(item)
+        e_params.append(item)
 
-    command = get_command(params)
+    command = get_command(e_params, extra_params)
     click.echo("Will run elastic search as: " + colored(' '.join(command), 'yellow'))
-    subprocess.run(command)
+    # subprocess.run(command)
 
 
-def get_command(params):
+def get_command(e_params, extra_params):
     final_params = []
-    for param in params:
+    for param in e_params:
         final_params.append('-E')
         final_params.append(param)
 
-    return ['node', 'scripts/es', 'snapshot'] + final_params
+    return ['node', 'scripts/es', 'snapshot'] + final_params + extra_params
 
 
 def process_params(data_dir, no_persist):
