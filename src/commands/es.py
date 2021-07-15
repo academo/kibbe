@@ -1,9 +1,9 @@
 import re
-from src.util import merge_params
+from src.util import merge_params, unparsed_to_map
 import subprocess
 
 from termcolor import colored
-from src.config import get_config
+from src.config import get_config, persist_config
 import click
 import tempfile
 from pathlib import Path
@@ -16,9 +16,10 @@ pathDataRe = re.compile(r"path\.data\s?=", re.IGNORECASE)
 ))
 @click.option('--data-dir', '-d', type=click.STRING, default="esdata", help="Path where this elastic search will store its data (path.data)")
 @click.option('--no-persist', '-n', default=False, is_flag=True, help="If passed will use a disposable data dir. This option will overwrite other options related to data dir.")
+@click.option('--save-config', default=False, is_flag=True, help="If passed it will write your kibbe configuration with all the current passed parameters. This will not modify your kibana repo clone.")
 @click.option('-E', multiple=True, help="Additional options to pass to elastic search. `path.data` will be ignored")
 @click.argument('unparsed_args', nargs=-1, type=click.UNPROCESSED)
-def es(data_dir, no_persist, e, unparsed_args):
+def es(data_dir, no_persist, e, unparsed_args, save_config):
     """
         Runs elastic search from the current kibana clone.
 
@@ -43,9 +44,17 @@ def es(data_dir, no_persist, e, unparsed_args):
 
     params = []
     config = get_config()
+
     if 'elastic.params' in config:
         config_params = config.items('elastic.params', raw=True)
         params = merge_params(config_params, unparsed_args)
+
+    if save_config:
+        persist_config({
+            'elastic.eparams': e_params,
+            'elastic.params': unparsed_to_map(params)
+        })
+        exit()
 
     command = get_command(e_params, extra_params=params)
     click.echo("Will run elastic search as: " + colored(' '.join(command), 'yellow'))

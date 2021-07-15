@@ -104,3 +104,20 @@ def merge_params(config_params, unparsed_args):
             final_params.append(params_map[param])
 
     return final_params
+
+
+def unparsed_to_map(params):
+    params_map = {}
+    skip = False
+    for index, param in enumerate(params):
+        if skip:
+            skip = False
+            continue
+        nextIsValue = len(params) > index + 1 and not str(params[index + 1]).startswith('--')
+        if param.startswith('--'):
+            if nextIsValue:
+                params_map[param] = params[index + 1]
+                skip = True
+            else:
+                params_map[param] = ''
+    return params_map
