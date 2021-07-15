@@ -25,6 +25,9 @@ def persist_config(config_map):
         if click.confirm("Are you sure you want to save this configuration?\nAll existing configuration will be overwritten"):
             config = get_config()
             for config_key in config_map:
+                if config_key not in config:
+                    config.add_section(config_key)
+
                 data = config_map[config_key]
                 if type(data) is dict:
                     for key in data:

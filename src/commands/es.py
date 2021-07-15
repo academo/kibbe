@@ -45,9 +45,10 @@ def es(data_dir, no_persist, e, unparsed_args, save_config):
     params = []
     config = get_config()
 
+    config_params = []
     if 'elastic.params' in config:
         config_params = config.items('elastic.params', raw=True)
-        params = merge_params(config_params, unparsed_args)
+    params = merge_params(config_params, unparsed_args)
 
     if save_config:
         persist_config({
