@@ -73,4 +73,4 @@ The configuration file is read from ~/.kibbe and it should follow the format in 
 
 # Contributing
 
-Follow the [contributing guide](CONTRIBUTING.mD)
+Follow the [contributing guide](CONTRIBUTING.md)
