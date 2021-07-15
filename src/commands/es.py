@@ -72,7 +72,7 @@ def get_command(e_params, extra_params):
 
 
 def process_params(data_dir, no_persist):
-    CONFIG_KEY = 'elastic.params'
+    CONFIG_KEY = 'elastic.eparams'
     config = get_config()
     params = []
     if CONFIG_KEY in config:
