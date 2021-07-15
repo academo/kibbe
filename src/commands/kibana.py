@@ -23,8 +23,11 @@ def kibana(unparsed_args):
     https://github.com/academo/kibbe#configuration-file
     """
 
+    config_params = []
     config = get_config()
-    config_params = config.items('kibana.params', raw=True)
+    if 'kibana.params' in config:
+        config_params = config.items('kibana.params', raw=True)
+
     params = merge_params(config_params, unparsed_args)
     command = ['node', 'scripts/kibana', '--dev'] + params
     click.echo("Will run kibana search as: " + colored(' '.join(command), 'yellow'))

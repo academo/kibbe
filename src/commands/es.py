@@ -41,9 +41,11 @@ def es(data_dir, no_persist, e, unparsed_args):
             continue
         e_params.append(item)
 
+    params = []
     config = get_config()
-    config_params = config.items('elastic.params', raw=True)
-    params = merge_params(config_params, unparsed_args)
+    if 'elastic.params' in config:
+        config_params = config.items('elastic.params', raw=True)
+        params = merge_params(config_params, unparsed_args)
 
     command = get_command(e_params, extra_params=params)
     click.echo("Will run elastic search as: " + colored(' '.join(command), 'yellow'))
