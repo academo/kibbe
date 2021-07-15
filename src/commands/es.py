@@ -47,7 +47,7 @@ def es(data_dir, no_persist, e, unparsed_args):
 
     command = get_command(e_params, extra_params=params)
     click.echo("Will run elastic search as: " + colored(' '.join(command), 'yellow'))
-    # subprocess.run(command)
+    subprocess.run(command)
 
 
 def get_command(e_params, extra_params):
