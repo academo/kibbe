@@ -10,12 +10,21 @@ from pathlib import Path
 pathDataRe = re.compile(r"path\.data\s?=", re.IGNORECASE)
 
 
-@click.command(help="Runs elastic search from the current kibana clone. It will use parameters from the ~/.kibbe [elastic.params] section.")
+@click.command()
 @click.option('--data-dir', '-d', type=click.STRING, default="esdata", help="Path where this elastic search will store its data (path.data)")
 @click.option('--no-persist', '-n', default=False, is_flag=True, help="If passed will use a disposable data dir. This option will overwrite other options related to data dir.")
 @click.option('--license', '-l', help="The license to use for this elastic. e.g trial")
 @click.option('-E', multiple=True, help="Additional options to pass to elastic search. `path.data` will be ignored")
 def es(data_dir, no_persist, e, license):
+    """
+        Runs elastic search from the current kibana clone.
+
+        You can persist the -E parameters by using a configuration file `~/.kibbe`.
+        with the [elastic.params] section.
+
+        See more about the configuration file here:
+        https://github.com/academo/kibbe#configuration-file
+    """
 
     e_params = process_params(data_dir, no_persist)
     extra_params = []
@@ -33,7 +42,7 @@ def es(data_dir, no_persist, e, license):
 
     command = get_command(e_params, extra_params)
     click.echo("Will run elastic search as: " + colored(' '.join(command), 'yellow'))
-    # subprocess.run(command)
+    subprocess.run(command)
 
 
 def get_command(e_params, extra_params):

@@ -9,5 +9,6 @@ xpack.security.authc.api_key.enabled=true
 # Each parameter here will be passed to kibana when run
 # Note that parameters without value still require an equal sign `=` at the end
 # the sign will be ignored when invoking
+# Do not add dashes at the start
 [kibana.params]
---no-base-path=
+no-base-path=

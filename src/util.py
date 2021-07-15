@@ -76,3 +76,29 @@ def find_related_plugin_folder(file):
         path = PurePath(path.parent)
 
     return str(path)
+
+
+def merge_params(config_params, unparsed_args):
+    final_params = []
+    params_map = {}
+    for conf, value in config_params:
+        params_map["--" + conf] = value
+
+    skip = False
+    for index, param in enumerate(unparsed_args):
+        if skip:
+            skip = False
+            continue
+        nextIsValue = len(unparsed_args) > index + 1 and not str(unparsed_args[index + 1]).startswith('--')
+        if param in params_map and nextIsValue:
+            params_map[param] = unparsed_args[index + 1]
+            skip = True
+        else:
+            params_map[param] = unparsed_args[index + 1] if nextIsValue else ''
+
+    for param in params_map:
+        final_params.append(param)
+        if len(params_map[param]) > 0:
+            final_params.append(params_map[param])
+
+    return final_params

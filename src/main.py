@@ -2,6 +2,7 @@ import click
 
 from src.commands.check import check
 from src.commands.es import es
+from src.commands.kibana import kibana
 from src.commands.setlicense import setlicense
 from src.util import force_kibana_root
 
@@ -23,3 +24,4 @@ def cli():
 cli.add_command(setlicense)
 cli.add_command(check)
 cli.add_command(es)
+cli.add_command(kibana)
