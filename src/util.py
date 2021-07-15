@@ -95,6 +95,8 @@ def merge_params(config_params, unparsed_args):
             skip = True
         else:
             params_map[param] = unparsed_args[index + 1] if nextIsValue else ''
+            if nextIsValue:
+                skip = True
 
     for param in params_map:
         final_params.append(param)

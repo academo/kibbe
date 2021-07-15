@@ -1,4 +1,5 @@
 import re
+from src.util import merge_params
 import subprocess
 
 from termcolor import colored
@@ -10,14 +11,18 @@ from pathlib import Path
 pathDataRe = re.compile(r"path\.data\s?=", re.IGNORECASE)
 
 
-@click.command()
+@click.command(context_settings=dict(
+    ignore_unknown_options=True,
+))
 @click.option('--data-dir', '-d', type=click.STRING, default="esdata", help="Path where this elastic search will store its data (path.data)")
 @click.option('--no-persist', '-n', default=False, is_flag=True, help="If passed will use a disposable data dir. This option will overwrite other options related to data dir.")
-@click.option('--license', '-l', help="The license to use for this elastic. e.g trial")
 @click.option('-E', multiple=True, help="Additional options to pass to elastic search. `path.data` will be ignored")
-def es(data_dir, no_persist, e, license):
+@click.argument('unparsed_args', nargs=-1, type=click.UNPROCESSED)
+def es(data_dir, no_persist, e, unparsed_args):
     """
         Runs elastic search from the current kibana clone.
+
+        You can also pass the same parameters as you'd pass to `node scritps/es`
 
         You can persist the -E parameters by using a configuration file `~/.kibbe`.
         with the [elastic.params] section.
@@ -27,10 +32,6 @@ def es(data_dir, no_persist, e, license):
     """
 
     e_params = process_params(data_dir, no_persist)
-    extra_params = []
-
-    if len(license) > 0:
-        extra_params = ['--license', license]
 
     # additional -E params
     for item in e:
@@ -40,9 +41,13 @@ def es(data_dir, no_persist, e, license):
             continue
         e_params.append(item)
 
-    command = get_command(e_params, extra_params)
+    config = get_config()
+    config_params = config.items('elastic.params', raw=True)
+    params = merge_params(config_params, unparsed_args)
+
+    command = get_command(e_params, extra_params=params)
     click.echo("Will run elastic search as: " + colored(' '.join(command), 'yellow'))
-    subprocess.run(command)
+    # subprocess.run(command)
 
 
 def get_command(e_params, extra_params):
