@@ -21,35 +21,28 @@ def get_config():
 
 
 def persist_config(config_map):
-    config = get_config()
-    for config_key in config_map:
-        print('---')
-        print(config_key)
-        print(config.items(config_key))
-        data = config_map[config_key]
-        if type(data) is dict:
-            for key in data:
-                wkey = key
-                if wkey.startswith('--'):
-                    wkey = wkey[2:]
-                config.set(config_key, wkey, data[key])
-        else:
-            for value in data:
-                value = value.split('=')
-                if len(value) > 1:
-                    config.set(config_key, value[0], value[1])
-                else:
-                    config.set(config_key, value[0], '')
-
-        print(config_key)
-        print(config.items(config_key))
-
-    config_file = open(get_config_path(), 'w')
-    config.write(config_file)
-    exit()
     try:
         if click.confirm("Are you sure you want to save this configuration?\nAll existing configuration will be overwritten"):
-            print(config_map)
+            config = get_config()
+            for config_key in config_map:
+                data = config_map[config_key]
+                if type(data) is dict:
+                    for key in data:
+                        wkey = key
+                        if wkey.startswith('--'):
+                            wkey = wkey[2:]
+                        config.set(config_key, wkey, data[key])
+                else:
+                    for value in data:
+                        value = value.split('=')
+                        if len(value) > 1:
+                            config.set(config_key, value[0], value[1])
+                        else:
+                            config.set(config_key, value[0], '')
+
+            config_file = open(get_config_path(), 'w')
+            config.write(config_file)
+            click.echo(colored('Configuration written to kibbe config', 'blue'))
         else:
             click.echo(colored("Cancelled", 'yellow'))
             exit()
