@@ -4,8 +4,9 @@ from src.commands.check import check
 from src.commands.es import es
 from src.commands.kibana import kibana
 from src.commands.setlicense import setlicense
-from src.util import force_kibana_root
+from src.commands.setmeup import setmeup
 from src.config import set_config_file
+from src.util import force_kibana_root
 
 
 @click.group(
@@ -32,3 +33,4 @@ cli.add_command(setlicense)
 cli.add_command(check)
 cli.add_command(es)
 cli.add_command(kibana)
+cli.add_command(setmeup)
