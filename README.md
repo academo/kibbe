@@ -72,6 +72,21 @@ Some kibbe subcommands can use persistent parameters from a configuration file.
 
 The configuration file is read from ~/.kibbe and it should follow the format in [the configuration file example](https://github.com/academo/kibbe/blob/master/kibbe-conf-example)
 
+## Tmux integration
+
+Kibbe can integrate with tmux to quickly run elasticsearch and kibana. Simply run kibbe inside an existing tmux window.
+
+You can know more about tmux [in this article](https://linuxize.com/post/getting-started-with-tmux/)
+
+### Tmux and iterm2
+
+Tmux and iterm2 have a [special integration](https://iterm2.com/documentation-tmux-integration.html). When you start your tmux session you can pass the `-CC` option and that will make tmux panels and windows turn into native iterm tabs and splits. Kibbe will work just as fine with it.
+
+With mac and iterm2 run tmux like this:
+```bash
+tmux -CC
+```
+
 # Contributing
 
 Follow the [contributing guide](CONTRIBUTING.md)
