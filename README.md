@@ -8,6 +8,7 @@ kibbe is a cli tool to ease common tasks when developing plugins for kibana.
 
 * Run elasticsearch for kibana with persistent configuration across clones
 * Run kibana with persistent configuration across clones
+* Run elasticsearch and kibana in a tmux session automated
 * Run fast checks for your code before committing
 * Discover tools and helpers you might not know
 * More coming: [open an issue](https://github.com/academo/kibbe/issues/new) with your suggestions
