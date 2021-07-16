@@ -12,8 +12,6 @@ jobs:
         include:
           - os: ubuntu-latest
             name: kibbe-linux-64
-          - os: macos-latest
-            name: kibbe-macos-64
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
