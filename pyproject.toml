@@ -2,4 +2,4 @@
 experimental-string-processing = 1
 
 [flake8]
-max-line-length = 88
+max-line-length = 100
