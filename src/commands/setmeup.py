@@ -28,23 +28,19 @@ def setmeup(clean, tmuxrun):
 
     commands.append(["yarn", "kbn", "bootstrap"])
 
+    for command in commands:
+        subprocess.run(command)
+
     if tmuxrun:
-        setup_tmux(commands)
-    else:
-        for command in commands:
-            subprocess.run(command)
+        setup_tmux()
 
 
-def setup_tmux(commands):
+def setup_tmux():
 
     current_window = get_current_window()
     clean_tmux_window(current_window)
     current_pane_id = os.getenv("TMUX_PANE")
     current_pane = current_window.get_by_id(current_pane_id)
-
-    # uncomment this
-    # for command in commands:
-    # current_pane.send_keys(" ".join(command))
 
     es_pane = current_window.split_window(vertical=False)
     start_and_wait_for_es(es_pane)
@@ -88,12 +84,11 @@ def start_and_wait_for_es(es_pane):
 
 
 def wait_for_elastic_search():
-    total = 15
+    total = 60
     current = total
     numbers = list(range(1, total))
     with click.progressbar(numbers) as bar:
         for item in bar:
-            print(item)
             current = item
             try:
                 requests.get("http://localhost:9200")
@@ -106,7 +101,6 @@ def wait_for_elastic_search():
     # progress = click.progressbar(length=total, label="Waiting for elasticsearch")
     # while timeout >= 0:
 
-    print("current is" + str(current))
     if current <= 0:
         return True
     else:
