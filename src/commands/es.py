@@ -62,7 +62,7 @@ def es(data_dir, no_persist, e, unparsed_args, save_config):
     https://github.com/academo/kibbe#configuration-file
     """
 
-    e_params = process_params(data_dir, no_persist)
+    e_params = get_params(data_dir, no_persist)
 
     # additional -E params
     for item in e:
@@ -100,7 +100,7 @@ def get_command(e_params, extra_params):
     return ["node", "scripts/es", "snapshot"] + final_params + extra_params
 
 
-def process_params(data_dir, no_persist):
+def get_params(data_dir, no_persist):
     CONFIG_KEY = "elastic.eparams"
     config = get_config()
     params = []
