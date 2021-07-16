@@ -57,15 +57,20 @@ def setup_tmux():
 def start_kibana(kibana_pane):
     current_dir = os.getcwd()
     kibbe_command = sys.argv[0]
+
     kibana_pane.send_keys("cd %s" % current_dir)
+    kibana_pane.send_keys("nvm use")
     kibana_pane.send_keys("%s kibana" % kibbe_command)
 
 
 def start_and_wait_for_es(es_pane):
     current_dir = os.getcwd()
     kibbe_command = sys.argv[0]
+
     es_pane.send_keys("cd %s" % current_dir)
+    es_pane.send_keys("nvm use")
     es_pane.send_keys("%s es" % kibbe_command)
+
     click.echo(
         colored(
             "echo Waiting for elasticsearch to start... If you run elasticsearch in a"
