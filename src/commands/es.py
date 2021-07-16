@@ -11,25 +11,54 @@ from pathlib import Path
 pathDataRe = re.compile(r"path\.data\s?=", re.IGNORECASE)
 
 
-@click.command(context_settings=dict(
-    ignore_unknown_options=True,
-))
-@click.option('--data-dir', '-d', type=click.STRING, default="esdata", help="Path where this elastic search will store its data (path.data)")
-@click.option('--no-persist', '-n', default=False, is_flag=True, help="If passed will use a disposable data dir. This option will overwrite other options related to data dir.")
-@click.option('--save-config', default=False, is_flag=True, help="If passed it will write your kibbe configuration with all the current passed parameters. This will not modify your kibana repo clone.")
-@click.option('-E', multiple=True, help="Additional options to pass to elastic search. `path.data` will be ignored")
-@click.argument('unparsed_args', nargs=-1, type=click.UNPROCESSED)
+@click.command(
+    context_settings=dict(
+        ignore_unknown_options=True,
+    )
+)
+@click.option(
+    "--data-dir",
+    "-d",
+    type=click.STRING,
+    default="esdata",
+    help="Path where this elastic search will store its data (path.data)",
+)
+@click.option(
+    "--no-persist",
+    "-n",
+    default=False,
+    is_flag=True,
+    help=(
+        "If passed will use a disposable data dir. This option will overwrite other"
+        " options related to data dir."
+    ),
+)
+@click.option(
+    "--save-config",
+    default=False,
+    is_flag=True,
+    help=(
+        "If passed it will write your kibbe configuration with all the current passed"
+        " parameters. This will not modify your kibana repo clone."
+    ),
+)
+@click.option(
+    "-E",
+    multiple=True,
+    help="Additional options to pass to elastic search. `path.data` will be ignored",
+)
+@click.argument("unparsed_args", nargs=-1, type=click.UNPROCESSED)
 def es(data_dir, no_persist, e, unparsed_args, save_config):
     """
-        Runs elastic search from the current kibana clone.
+    Runs elastic search from the current kibana clone.
 
-        You can also pass the same parameters as you'd pass to `node scritps/es`
+    You can also pass the same parameters as you'd pass to `node scritps/es`
 
-        You can persist the -E parameters by using a configuration file `~/.kibbe`.
-        with the [elastic.params] section.
+    You can persist the -E parameters by using a configuration file `~/.kibbe`.
+    with the [elastic.params] section.
 
-        See more about the configuration file here:
-        https://github.com/academo/kibbe#configuration-file
+    See more about the configuration file here:
+    https://github.com/academo/kibbe#configuration-file
     """
 
     e_params = process_params(data_dir, no_persist)
@@ -46,46 +75,45 @@ def es(data_dir, no_persist, e, unparsed_args, save_config):
     config = get_config()
 
     config_params = []
-    if 'elastic.params' in config:
-        config_params = config.items('elastic.params', raw=True)
+    if "elastic.params" in config:
+        config_params = config.items("elastic.params", raw=True)
     params = merge_params(config_params, unparsed_args)
 
     if save_config:
-        persist_config({
-            'elastic.eparams': e_params,
-            'elastic.params': unparsed_to_map(params)
-        })
+        persist_config(
+            {"elastic.eparams": e_params, "elastic.params": unparsed_to_map(params)}
+        )
         exit()
 
     command = get_command(e_params, extra_params=params)
-    click.echo("Will run elastic search as: " + colored(' '.join(command), 'yellow'))
+    click.echo("Will run elastic search as: " + colored(" ".join(command), "yellow"))
     subprocess.run(command)
 
 
 def get_command(e_params, extra_params):
     final_params = []
     for param in e_params:
-        final_params.append('-E')
+        final_params.append("-E")
         final_params.append(param)
 
-    return ['node', 'scripts/es', 'snapshot'] + final_params + extra_params
+    return ["node", "scripts/es", "snapshot"] + final_params + extra_params
 
 
 def process_params(data_dir, no_persist):
-    CONFIG_KEY = 'elastic.eparams'
+    CONFIG_KEY = "elastic.eparams"
     config = get_config()
     params = []
     if CONFIG_KEY in config:
         for (key, value) in config.items(CONFIG_KEY, raw=True):
             # ignore path.data if this command overwrites it
-            if key == 'path.data':
+            if key == "path.data":
                 if len(data_dir) > 0:
                     value = get_data_dir(data_dir, no_persist)
                 else:
                     value = get_data_dir(value, no_persist)
 
             if len(value) > 0:
-                params.append(str(key) + '=' + str(value))
+                params.append(str(key) + "=" + str(value))
             else:
                 params.append(str(key))
 
@@ -94,6 +122,6 @@ def process_params(data_dir, no_persist):
 
 def get_data_dir(data_dir, no_persist):
     if no_persist or len(data_dir) == 0:
-        return tempfile.mkdtemp(suffix='kibbe')
+        return tempfile.mkdtemp(suffix="kibbe")
 
     return str(Path(data_dir).resolve())
