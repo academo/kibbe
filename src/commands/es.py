@@ -1,12 +1,13 @@
-import re
-from src.util import merge_params, unparsed_to_map
-import subprocess
-
-from termcolor import colored
-from src.config import get_config, persist_config
-import click
-import tempfile
 from pathlib import Path
+import re
+import subprocess
+import tempfile
+
+import click
+from termcolor import colored
+
+from src.config import get_config, persist_config
+from src.util import merge_params, unparsed_to_map
 
 pathDataRe = re.compile(r"path\.data\s?=", re.IGNORECASE)
 
