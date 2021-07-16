@@ -21,6 +21,23 @@ def get_config():
 
 
 def persist_config(config_map):
+
+    config = get_config_to_save(config_map)
+
+    try:
+        print_config(config)
+        if click.confirm("Are you sure you want to save this configuration?\nAll existing configuration will be overwritten"):
+            config_file = open(get_config_path(), 'w')
+            config.write(config_file)
+            click.echo(colored('Configuration written to kibbe config', 'blue'))
+        else:
+            click.echo(colored("Cancelled", 'yellow'))
+            exit()
+    except ValueError:
+        exit()
+
+
+def get_config_to_save(config_map):
     config = get_config()
     for config_key in config_map:
         if config_key not in config:
@@ -41,17 +58,7 @@ def persist_config(config_map):
                 else:
                     config.set(config_key, value[0], '')
 
-    try:
-        print_config(config)
-        if click.confirm("Are you sure you want to save this configuration?\nAll existing configuration will be overwritten"):
-            config_file = open(get_config_path(), 'w')
-            config.write(config_file)
-            click.echo(colored('Configuration written to kibbe config', 'blue'))
-        else:
-            click.echo(colored("Cancelled", 'yellow'))
-            exit()
-    except ValueError:
-        exit()
+    return config
 
 
 def print_config(config):
