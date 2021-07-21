@@ -91,3 +91,5 @@ def check(skip_tests, check_types, skip_stylescheck):
         click.echo(colored(">> Errors found running checks:\n", "red"))
         for fail in fails:
             click.echo("      ❌ - " + str(fail))
+
+    click.echo("kibbe check complete")

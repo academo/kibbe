@@ -21,7 +21,7 @@ pathDataRe = re.compile(r"path\.data\s?=", re.IGNORECASE)
     "--data-dir",
     "-d",
     type=click.STRING,
-    default="esdata",
+    default="",
     help="Path where this elastic search will store its data (path.data)",
 )
 @click.option(
