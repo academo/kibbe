@@ -2,6 +2,8 @@ import json
 import os
 import subprocess
 from pathlib import PurePath
+import time
+import requests
 
 import click
 
@@ -129,3 +131,27 @@ def unparsed_to_map(params):
             else:
                 params_map[param] = ""
     return params_map
+
+
+def wait_for_elastic_search():
+    total = 60
+    current = total
+    numbers = list(range(1, total))
+    with click.progressbar(numbers) as bar:
+        for item in bar:
+            current = item
+            try:
+                requests.get("http://localhost:9200")
+                break
+            except requests.ConnectionError:
+                pass
+            finally:
+                time.sleep(1)
+
+    # progress = click.progressbar(length=total, label="Waiting for elasticsearch")
+    # while timeout >= 0:
+
+    if current <= 0:
+        return True
+    else:
+        return False

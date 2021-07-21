@@ -1,8 +1,7 @@
 import os
 import subprocess
 import sys
-import time
-import requests
+from src.util import wait_for_elastic_search
 
 import click
 from termcolor import colored
@@ -86,30 +85,6 @@ def start_and_wait_for_es(es_pane):
         )
     else:
         click.echo(colored("elasticsearch is ready", "blue"))
-
-
-def wait_for_elastic_search():
-    total = 60
-    current = total
-    numbers = list(range(1, total))
-    with click.progressbar(numbers) as bar:
-        for item in bar:
-            current = item
-            try:
-                requests.get("http://localhost:9200")
-                break
-            except requests.ConnectionError:
-                pass
-            finally:
-                time.sleep(1)
-
-    # progress = click.progressbar(length=total, label="Waiting for elasticsearch")
-    # while timeout >= 0:
-
-    if current <= 0:
-        return True
-    else:
-        return False
 
 
 def get_current_window():
