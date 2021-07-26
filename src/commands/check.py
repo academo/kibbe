@@ -16,7 +16,7 @@ from src.util import find_related_plugin_folder, find_related_test, get_modified
     "--skip-stylescheck", default=False, help="Skip running styles check", is_flag=True
 )
 @click.option(
-    "--check-types",
+    "--types",
     default=False,
     help="Runs Typescript types check (if relevant)",
     is_flag=True,
