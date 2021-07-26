@@ -1,7 +1,6 @@
 import os
 import subprocess
 import sys
-from src.util import wait_for_elastic_search
 
 import click
 from termcolor import colored
@@ -42,7 +41,7 @@ def setup_tmux():
     current_pane = current_window.get_by_id(current_pane_id)
 
     es_pane = current_window.split_window(vertical=False)
-    start_and_wait_for_es(es_pane)
+    start_es(es_pane)
 
     click.echo(colored("Starting kibana and closing this pane", "yellow"))
     kibana_pane = current_window.split_window(vertical=False)
@@ -59,32 +58,16 @@ def start_kibana(kibana_pane):
 
     kibana_pane.send_keys("cd %s" % current_dir)
     kibana_pane.send_keys("nvm use")
-    kibana_pane.send_keys("%s kibana" % kibbe_command)
+    kibana_pane.send_keys("%s kibana --wait" % kibbe_command)
 
 
-def start_and_wait_for_es(es_pane):
+def start_es(es_pane):
     current_dir = os.getcwd()
     kibbe_command = sys.argv[0]
 
     es_pane.send_keys("cd %s" % current_dir)
     es_pane.send_keys("nvm use")
     es_pane.send_keys("%s es" % kibbe_command)
-
-    click.echo(
-        colored(
-            "echo Waiting for elasticsearch to start... If you run elasticsearch in a"
-            " non-standard port this will timeout after 60 seconds",
-            "blue",
-        )
-    )
-
-    timeout = wait_for_elastic_search()
-    if timeout:
-        click.echo(
-            colored("elasticsearch timeout. Continuing with kibana anyway", "red")
-        )
-    else:
-        click.echo(colored("elasticsearch is ready", "blue"))
 
 
 def get_current_window():
