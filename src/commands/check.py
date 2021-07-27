@@ -21,7 +21,7 @@ from src.util import find_related_plugin_folder, find_related_test, get_modified
     help="Runs Typescript types check (if relevant)",
     is_flag=True,
 )
-def check(skip_tests, check_types, skip_stylescheck):
+def check(skip_tests, types, skip_stylescheck):
 
     modified = get_modified_files()
 
@@ -57,7 +57,7 @@ def check(skip_tests, check_types, skip_stylescheck):
             fails.append("Stylelint")
 
     # types check
-    if check_types and len(configs) > 0:
+    if types and len(configs) > 0:
         click.echo(colored(">> Finding tsconfig.json", "yellow"))
         for config in configs:
             tsconfig = os.path.join(config, "tsconfig.json")
