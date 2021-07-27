@@ -1,5 +1,6 @@
 from pathlib import Path
 import re
+from shutil import rmtree
 import subprocess
 import tempfile
 
@@ -44,12 +45,18 @@ pathDataRe = re.compile(r"path\.data\s?=", re.IGNORECASE)
     ),
 )
 @click.option(
+    "--flush",
+    is_flag=True,
+    default=False,
+    help="If passed will flush the ES datadir directory before starting es.",
+)
+@click.option(
     "-E",
     multiple=True,
     help="Additional options to pass to elastic search. `path.data` will be ignored",
 )
 @click.argument("unparsed_args", nargs=-1, type=click.UNPROCESSED)
-def es(data_dir, no_persist, e, unparsed_args, save_config):
+def es(data_dir, no_persist, e, unparsed_args, save_config, flush):
     """
     Runs elastic search from the current kibana clone.
 
@@ -79,6 +86,18 @@ def es(data_dir, no_persist, e, unparsed_args, save_config):
     if "elastic.params" in config:
         config_params = config.items("elastic.params", raw=True)
     params = merge_params(config_params, unparsed_args)
+
+    if flush:
+        for param in e_params:
+            if param.startswith("path.data="):
+                try:
+                    dataDir = param.split("=")[1]
+                    click.echo(colored("Will remove data dir %s" % (dataDir), "red"))
+                    rmtree(dataDir, ignore_errors=True)
+                except ValueError:
+                    pass
+                finally:
+                    break
 
     if save_config:
         persist_config(

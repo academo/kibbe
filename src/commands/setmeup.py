@@ -11,14 +11,20 @@ import libtmux
 @click.command(help="Proxy for yarn kbn bootstrap")
 @click.option("--clean", "-c", is_flag=True, help="Runs bootstrap with clean")
 @click.option(
-    "--tmuxrun",
+    "--tmux",
     is_flag=True,
     help=(
         "If you run kibbe inside a tmux session it will divide the current window, run"
         " elasticsearch (kibbe es) and kibana (kibbe kibana)"
     ),
 )
-def setmeup(clean, tmuxrun):
+@click.option(
+    "--flush",
+    is_flag=True,
+    default=False,
+    help="If passed will pass the flush flag to ES when initializing",
+)
+def setmeup(clean, tmux, flush):
 
     commands = []
     if clean:
@@ -29,11 +35,11 @@ def setmeup(clean, tmuxrun):
     for command in commands:
         subprocess.run(command)
 
-    if tmuxrun:
-        setup_tmux()
+    if tmux:
+        setup_tmux(flush=flush)
 
 
-def setup_tmux():
+def setup_tmux(flush=False):
 
     current_window = get_current_window()
     clean_tmux_window(current_window)
@@ -41,7 +47,7 @@ def setup_tmux():
     current_pane = current_window.get_by_id(current_pane_id)
 
     es_pane = current_window.split_window(vertical=False)
-    start_es(es_pane)
+    start_es(es_pane, flush=flush)
 
     click.echo(colored("Starting kibana and closing this pane", "yellow"))
     kibana_pane = current_window.split_window(vertical=False)
@@ -61,13 +67,17 @@ def start_kibana(kibana_pane):
     kibana_pane.send_keys("%s kibana --wait" % kibbe_command)
 
 
-def start_es(es_pane):
+def start_es(es_pane, flush=False):
     current_dir = os.getcwd()
     kibbe_command = sys.argv[0]
 
+    params = ""
+    if flush:
+        params = "--flush"
+
     es_pane.send_keys("cd %s" % current_dir)
     es_pane.send_keys("nvm use")
-    es_pane.send_keys("%s es" % kibbe_command)
+    es_pane.send_keys("%s es %s" % (kibbe_command, params))
 
 
 def get_current_window():
