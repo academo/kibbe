@@ -60,6 +60,7 @@ def fleet(run, snapshot, docker_ip):
         click.echo(" - Autodetected docker host ip: " + colored(docker_ip, "blue"))
 
         docker_command = """docker run \
+            --restart no \
             --add-host kibana:{host_ip} \
             --add-host elasticsearch:{host_ip} \
             --add-host fleetserver:127.0.0.1 \
