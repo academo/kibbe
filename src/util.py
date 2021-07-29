@@ -17,6 +17,22 @@ def is_tool(name):
     return which(name) is not None
 
 
+def is_es_running():
+    try:
+        requests.get("http://localhost:9200")
+        return True
+    except requests.ConnectionError:
+        return False
+
+
+def is_kibana_running():
+    try:
+        requests.get("http://localhost:5601")
+        return True
+    except requests.ConnectionError:
+        return False
+
+
 def force_kibana_root():
     if not is_kibana_repo():
         raise click.ClickException(
@@ -140,13 +156,9 @@ def wait_for_elastic_search():
     with click.progressbar(numbers) as bar:
         for item in bar:
             current = item
-            try:
-                requests.get("http://localhost:9200")
+            if is_es_running():
                 break
-            except requests.ConnectionError:
-                pass
-            finally:
-                time.sleep(1)
+            time.sleep(1)
 
     # progress = click.progressbar(length=total, label="Waiting for elasticsearch")
     # while timeout >= 0:

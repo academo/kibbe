@@ -1,3 +1,4 @@
+from src.commands.fleet import fleet
 import click
 
 from src.commands.check import check
@@ -34,3 +35,4 @@ cli.add_command(check)
 cli.add_command(es)
 cli.add_command(kibana)
 cli.add_command(setmeup)
+cli.add_command(fleet)
