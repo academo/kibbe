@@ -1,3 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 from src import main
+
 main.cli()
