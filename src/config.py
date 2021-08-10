@@ -22,6 +22,7 @@ def get_config_file():
 
 def get_config():
     config = configparser.ConfigParser()
+    config.optionxform = str
     try:
         config.read(get_config_file())
     except ValueError:
