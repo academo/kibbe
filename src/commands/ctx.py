@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from src.tmux import get_current_panel, is_inside_tmux
 import subprocess
 
 import click
@@ -39,7 +40,14 @@ from src.util import get_valid_filename
     is_flag=True,
     default=False,
 )
-def ctx(name, parent_path, source, branch, interactive, overwrite_branch):
+@click.option(
+    "--cd",
+    "--change-dir",
+    help="Change to new context directory (Tmux only)",
+    is_flag=True,
+    default=True,
+)
+def ctx(name, parent_path, source, branch, interactive, overwrite_branch, cd):
 
     # TODO check if the worktree exists and switch to it
     path_name = get_valid_filename(name)
@@ -102,3 +110,14 @@ def ctx(name, parent_path, source, branch, interactive, overwrite_branch):
 
     click.echo("To change to your new worktree run:")
     click.echo(colored("cd %s" % full_path, "yellow"))
+
+    # this must always be the last command
+    if cd and is_inside_tmux():
+        click.echo("Tmux session detected. Changing to worktree")
+        current_pane = get_current_panel()
+        current_pane.send_keys("cd %s && nvm use" % full_path)
+        exit(0)
+    elif not is_inside_tmux():
+        click.echo(
+            "Changing to a worktree is only supported if you are running inside tmux"
+        )

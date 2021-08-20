@@ -3,9 +3,9 @@ import subprocess
 import sys
 
 import click
-from termcolor import colored
-
 import libtmux
+from termcolor import colored
+from src.tmux import get_current_window, clean_tmux_window
 
 
 @click.command(help="Proxy for yarn kbn bootstrap")
@@ -78,44 +78,3 @@ def start_es(es_pane, flush=False):
     es_pane.send_keys("cd %s" % current_dir)
     es_pane.send_keys("nvm use")
     es_pane.send_keys("%s es %s" % (kibbe_command, params))
-
-
-def get_current_window():
-    tmux_panel = os.getenv("TMUX_PANE")
-    tmux_session = os.getenv("TMUX")
-    if not tmux_panel or not tmux_session:
-        raise click.ClickException("Not inside a tmux session")
-
-    tmux_session_id = "$" + tmux_session.split(",")[-1]
-    server = libtmux.Server()
-
-    session = server.get_by_id(tmux_session_id)
-    if not session:
-        raise click.ClickException("Could not interact with Tmux. Wrong tmux version")
-
-    return session.attached_window
-
-
-def clean_tmux_window(current_window):
-
-    if len(current_window.panes) > 1:
-        if not click.confirm(
-            colored(
-                "The current window has more than 1 pane. Do you want to close them all"
-                " and start new ones?",
-                "yellow",
-            )
-        ):
-            raise click.ClickException(
-                colored(
-                    "Close all panes or create a new window to continue and run kibbe"
-                    " again",
-                    "red",
-                )
-            )
-        current_pane_id = os.getenv("TMUX_PANE")
-        current_pane = current_window.get_by_id(current_pane_id)
-        panes = iter(current_window.panes)
-        for pane in panes:
-            if pane != current_pane:
-                pane.cmd("kill-pane")
