@@ -1,13 +1,13 @@
 import click
 
 from src.commands.check import check
+from src.commands.config import config
 from src.commands.ctx import ctx
 from src.commands.es import es
 from src.commands.fleet import fleet
 from src.commands.kibana import kibana
 from src.commands.setlicense import setlicense
 from src.commands.setmeup import setmeup
-from src.config import set_config_file
 from src.util import force_kibana_root
 
 
@@ -23,11 +23,7 @@ from src.util import force_kibana_root
         example in the kibbe repository
 """
 )
-@click.option(
-    "--config-file", help="Overwrites the default (~/.kibbe) config file location"
-)
-def cli(config_file):
-    set_config_file(config_file)
+def cli():
     force_kibana_root()
 
 
@@ -38,3 +34,4 @@ cli.add_command(kibana)
 cli.add_command(setmeup)
 cli.add_command(fleet)
 cli.add_command(ctx)
+cli.add_command(config)

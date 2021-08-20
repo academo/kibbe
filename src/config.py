@@ -1,28 +1,45 @@
 import configparser
-from pathlib import Path, PurePath
+import os
+from pathlib import Path
 
 import click
 from termcolor import colored
 
-config_path = ""
 
+def get_config_file(first=False):
 
-def set_config_file(path):
-    global config_path
-    if path and len(path) > 0:
-        config_path = str(PurePath(path))
-    else:
-        config_path = str(PurePath(Path.home()).joinpath(".kibbe"))
+    default_config_file = str(Path.home().joinpath(".kibbe"))
 
+    config_files = []
 
-def get_config_file():
-    global config_path
-    return config_path
+    current_dir = os.getcwd()
+
+    possible_paths = [
+        default_config_file,
+        str(Path.home().joinpath(".kibberc")),
+        os.path.join(current_dir, ".kibbe"),
+        os.path.join(current_dir, ".kibberc"),
+    ]
+    for path in possible_paths:
+        possible_path = Path(path)
+        if possible_path.exists():
+            config_files.append(str(path))
+
+    if len(config_files) == 0:
+        config_files.append(default_config_file)
+
+    if first:
+        return config_files[0]
+
+    return possible_paths
 
 
 def get_config():
     config = configparser.ConfigParser()
-    config.optionxform = str
+    try:
+        config.optionxform = str  # type: ignore
+    except ValueError:
+        pass
     try:
         config.read(get_config_file())
     except ValueError:
@@ -36,12 +53,13 @@ def persist_config(config_map):
     config = get_config_to_save(config_map)
 
     try:
+        click.echo(colored("Config to save:\n ", "yellow"))
         print_config(config)
         if click.confirm(
             "Are you sure you want to save this configuration?\nAll existing"
             " configuration will be overwritten"
         ):
-            config_file = open(get_config_file(), "w")
+            config_file = open(get_config_file(first=True), "w")
             config.write(config_file)
             click.echo(colored("Configuration written to kibbe config", "blue"))
         else:
@@ -86,5 +104,4 @@ def print_config(config):
         config_string = config_string + "\n"
     config_string = config_string + "---end---"
 
-    click.echo(colored("Config to save:\n ", "yellow"))
     click.echo(config_string)
