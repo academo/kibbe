@@ -1,11 +1,12 @@
 import json
 import os
-import subprocess
 from pathlib import PurePath
+import re
+import subprocess
 import time
-import requests
 
 import click
+import requests
 
 
 def is_tool(name):
@@ -167,3 +168,9 @@ def wait_for_elastic_search():
         return True
     else:
         return False
+
+
+def get_valid_filename(name):
+    s = str(name).strip().replace(" ", "_")
+    s = re.sub(r"(?u)[^-\w.]", "-", s)
+    return s

@@ -1,8 +1,9 @@
-from src.commands.fleet import fleet
 import click
 
 from src.commands.check import check
+from src.commands.ctx import ctx
 from src.commands.es import es
+from src.commands.fleet import fleet
 from src.commands.kibana import kibana
 from src.commands.setlicense import setlicense
 from src.commands.setmeup import setmeup
@@ -36,3 +37,4 @@ cli.add_command(es)
 cli.add_command(kibana)
 cli.add_command(setmeup)
 cli.add_command(fleet)
+cli.add_command(ctx)
