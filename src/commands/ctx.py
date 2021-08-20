@@ -11,7 +11,9 @@ from src.util import get_valid_filename
 
 
 @click.command()
-@click.argument("name", type=click.STRING, autocompletion=get_worktree_list_flat)
+@click.argument(
+    "name", type=click.STRING, autocompletion=get_worktree_list_flat, required=False
+)
 @click.option(
     "--branch",
     help="Branch name to use for the new worktree",
@@ -48,9 +50,36 @@ from src.util import get_valid_filename
     is_flag=True,
     default=True,
 )
-def ctx(name, parent_path, source, branch, interactive, overwrite_branch, cd):
+@click.option(
+    "--delete",
+    help="Removes the worktree if exists",
+    is_flag=True,
+    default=False,
+    confirmation_prompt=True,
+)
+@click.option(
+    "-l",
+    "--list-worktrees",
+    help="List existing worktree. Alias for `git worktree list`",
+    is_flag=True,
+    default=False,
+)
+def ctx(
+    name,
+    parent_path,
+    source,
+    branch,
+    interactive,
+    overwrite_branch,
+    cd,
+    list_worktrees,
+    delete,
+):
     """
     ctx is a wrapper kibbe subcommand for git worktree with some quality of life improvements.
+
+    NAME accepts a name of the "context" you want to switch. It is a shorthand to not have to remember
+    paths as is required with git worktree.
 
     It allows you to quickly switch and create git worktrees without having to type or memorize
     all the git worktree parameterse.
@@ -62,9 +91,33 @@ def ctx(name, parent_path, source, branch, interactive, overwrite_branch, cd):
     you want with ctx please see the git worktree manual entry https://git-scm.com/docs/git-worktree
     """
 
-    # TODO check if the worktree exists and switch to it
+    if list_worktrees:
+        subprocess.run(["git", "worktree", "list"])
+        exit(0)
+
+    if not name:
+        raise click.ClickException(
+            colored(
+                "You must pass the NAME of the worktree you want to change to", "red"
+            )
+        )
+
     path_name = get_valid_filename(name)
     existing_worktree = find_existing_worktree(path_name)
+
+    if delete and not existing_worktree:
+        raise click.ClickException(
+            "Can not remove worktree. Worktree doesn't exist: "
+            + colored(path_name, "red")
+        )
+    elif delete:
+        if click.confirm(
+            "Are you sure you want to delete the wortree"
+            + colored(existing_worktree["worktree"], "yellow")
+        ):
+            click.echo("Deleting worktree...")
+            subprocess.run(["git", "worktree", "remove", existing_worktree["worktree"]])
+        exit(0)
 
     if existing_worktree:
         return handle_existing_worktree(existing_worktree)
