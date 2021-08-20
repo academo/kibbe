@@ -9,8 +9,36 @@ from termcolor import colored
 from src.util import get_valid_filename
 
 
+def get_worktree_list():
+    raw_list = subprocess.getoutput("git worktree list --porcelain")
+    worktrees = []
+    raw_list = raw_list.split("\n")
+
+    current = {}
+    for item in raw_list:
+        if not item:
+            worktrees.append(current)
+            current = {}
+            continue
+
+        [name, value] = item.split(" ")
+        current[name] = value
+
+    return worktrees
+
+
+def get_worktree_list_flat(incomplete=""):
+    final = []
+    worktrees = get_worktree_list()
+    for tree in worktrees:
+        if not incomplete or (incomplete and tree["worktree"].startswith(incomplete)):
+            final.append(tree["worktree"])
+
+    return final
+
+
 @click.command()
-@click.argument("name")
+@click.argument("name", type=click.STRING, autocompletion=get_worktree_list_flat)
 @click.option(
     "--branch",
     help="Branch name to use for the new worktree",
@@ -175,21 +203,3 @@ def find_existing_worktree(path_name):
             break
 
     return existing_worktree
-
-
-def get_worktree_list():
-    raw_list = subprocess.getoutput("git worktree list --porcelain")
-    worktrees = []
-    raw_list = raw_list.split("\n")
-
-    current = {}
-    for item in raw_list:
-        if not item:
-            worktrees.append(current)
-            current = {}
-            continue
-
-        [name, value] = item.split(" ")
-        current[name] = value
-
-    return worktrees
