@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from src.git import find_existing_worktree, get_worktree_list_flat
 from src.tmux import get_current_panel, is_inside_tmux
 import subprocess
 
@@ -7,34 +8,6 @@ import click
 from termcolor import colored
 
 from src.util import get_valid_filename
-
-
-def get_worktree_list():
-    raw_list = subprocess.getoutput("git worktree list --porcelain")
-    worktrees = []
-    raw_list = raw_list.split("\n")
-
-    current = {}
-    for item in raw_list:
-        if not item:
-            worktrees.append(current)
-            current = {}
-            continue
-
-        [name, value] = item.split(" ")
-        current[name] = value
-
-    return worktrees
-
-
-def get_worktree_list_flat(incomplete=""):
-    final = []
-    worktrees = get_worktree_list()
-    for tree in worktrees:
-        if not incomplete or (incomplete and tree["worktree"].startswith(incomplete)):
-            final.append(tree["worktree"])
-
-    return final
 
 
 @click.command()
@@ -191,15 +164,3 @@ def handle_existing_worktree(existing_worktree):
         current_pane = get_current_panel()
         current_pane.send_keys("cd %s && nvm use" % existing_path_name)
         exit(0)
-
-
-def find_existing_worktree(path_name):
-    worktrees = get_worktree_list()
-    existing_worktree = {}
-    for tree in worktrees:
-        path = Path(tree["worktree"])
-        if path.name == path_name:
-            existing_worktree = tree
-            break
-
-    return existing_worktree
