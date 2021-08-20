@@ -10,6 +10,8 @@ kibbe is a cli tool to ease common tasks when developing plugins for kibana.
 * Run kibana with persistent configuration across clones
 * Run elasticsearch and kibana in a tmux session automated
 * Run fast checks for your code before committing
+* Manage git worktree paths
+* Custom configuration across kibana clones or git worktrees
 * Discover tools and helpers you might not know
 * More coming: [open an issue](https://github.com/academo/kibbe/issues/new) with your suggestions
 
@@ -66,11 +68,12 @@ e.g.:
 
 ## Configuration file
 
-Create a configuration file in your home `~/.kibbe`
+Create a configuration file in your home `~/.kibberc` or you can create it directly on your kibana
+clone/worktree with a `.kibberc` file. (make sure to add it to your git ignore)
 
 Some kibbe subcommands can use persistent parameters from a configuration file.
 
-The configuration file is read from ~/.kibbe and it should follow the format in [the configuration file example](https://github.com/academo/kibbe/blob/master/kibbe-conf-example)
+The configuration file should follow the format in [the configuration file example](https://github.com/academo/kibbe/blob/master/kibbe-conf-example)
 
 ## Tmux integration
 
