@@ -1,4 +1,5 @@
 # This is kibbe configuration file example
+# Put this file in ~/.kibberc or in your kibana clone as .kibberc (do not commit)
 
 # Each parameter here will be passed to elastic search as an `-E` parameter.
 # Note that parameters without value still require an equal sign `=` at the end
