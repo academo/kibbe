@@ -1,3 +1,4 @@
+from src.config import get_config, make_config_files
 import click
 
 from src.commands.check import check
@@ -25,6 +26,8 @@ from src.util import force_kibana_root
 )
 def cli():
     force_kibana_root()
+    config = get_config()
+    make_config_files(config)
 
 
 cli.add_command(setlicense)

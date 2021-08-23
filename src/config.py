@@ -1,6 +1,7 @@
 import configparser
 import os
 from pathlib import Path
+from src.util import get_valid_filename
 
 import click
 from termcolor import colored
@@ -34,6 +35,46 @@ def get_config_file(first=False):
     return possible_paths
 
 
+def make_config_files(config):
+    for section in config.sections():
+        if section.startswith("file-") and "content" in config[section]:
+            try:
+
+                current_dir = os.getcwd()
+                filename = get_valid_filename(section[5:])
+                filepath = os.path.join(current_dir, filename)
+                content = config[section]["content"].lstrip()
+
+                try:
+
+                    # if the file exists, check they don't have different content
+                    if Path(filepath).exists():
+                        current_file = open(filepath, "r")
+                        current_content = current_file.read()
+
+                        # if the current content and future content are the same continue
+                        if current_content == content:
+                            continue
+                        else:
+                            if not click.confirm(
+                                "File "
+                                + colored(filename, "yellow")
+                                + " already exists and has a different content."
+                                " Overwrite?"
+                            ):
+                                continue
+                except ValueError:
+                    pass
+
+                # write the config file
+                click.echo("Writing config file " + colored(filename, "yellow"))
+                file = open(filepath, "w")
+                file.write(content)
+                file.close()
+            except ValueError:
+                pass
+
+
 def get_config():
     config = configparser.ConfigParser()
     try:
@@ -59,7 +100,7 @@ def persist_config(config_map):
             "Are you sure you want to save this configuration?\nAll existing"
             " configuration will be overwritten"
         ):
-            config_file = open(get_config_file(first=True), "w")
+            config_file = open(str(get_config_file(first=True)), "w")
             config.write(config_file)
             click.echo(colored("Configuration written to kibbe config", "blue"))
         else:

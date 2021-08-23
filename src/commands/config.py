@@ -10,4 +10,5 @@ def config():
     Prints the current kibbe configuration and where is it taking it from
     """
     click.echo(colored("Configuration to use", "yellow"))
-    print_config(get_config())
+    config = get_config()
+    print_config(config)

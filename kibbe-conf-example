@@ -17,3 +17,29 @@ license=trial
 # Do not add dashes at the start
 [kibana.params]
 no-base-path=
+
+# Any section starting with the `file-` prefix will be
+# used to create a file, using the string after `file-` as the
+# name and the key `content` as the content.
+#
+# Existing files will be overwritten!
+#
+# NOTE: All the content of the content key must be idented once
+#
+# e.g:
+# will craete log4j2.properties in the current kibana clone
+# Notice the identation
+[file-log4j2.properties]
+content =
+  logger.discovery.level = debug
+  other.key = test
+  my value = other
+
+# e.g.
+# will create `config-test.json` in the current kibana clone
+# Notice the identation
+[file-config-test.json]
+content =
+  {
+    name: "value"
+  }
