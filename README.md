@@ -1,6 +1,6 @@
 # About
 
-![image](https://user-images.githubusercontent.com/227916/125775833-cb2ceb2a-07bd-4eea-888b-ba05c3b41f0c.png)
+![ezgif-7-a5998c76bc8a](https://user-images.githubusercontent.com/227916/130441363-54002dad-4a00-43f9-a4e8-ce22f7123b9a.gif)
 
 kibbe is a cli tool to ease common tasks when developing plugins for kibana.
 
@@ -74,6 +74,26 @@ clone/worktree with a `.kibberc` file. (make sure to add it to your git ignore)
 Some kibbe subcommands can use persistent parameters from a configuration file.
 
 The configuration file should follow the format in [the configuration file example](https://github.com/academo/kibbe/blob/master/kibbe-conf-example)
+
+### Custom configuration files
+
+you can generate custom configurations files with kibbe. If you specify a section in the configuration file prefixed with `file-[name]` it will
+create a `[name]` file on the current kibana clone and put the content on it (see the configuration file example)
+
+This is very useful when you work with git worktrees.
+
+Note: kibbe only supports top-level configuration files
+
+## Context manager
+
+Kibbe makes use of [git worktrees](https://git-scm.com/docs/git-worktree) to manage "contexts". Kibbe adds some easy to use commands
+to switch between git worktrees without having to worry about remembering paths or all git worktree parameters.
+
+If you use a `~/.kibberc` configuration file, kibbe will pick it up to run elastic and kibana so you don't need to re-configure your elastic, kibana or
+other configuration files in your git worktrees. This make it easier to keep the same configuration across all your worktrees.
+
+If you want to have a custom configuration on an specific worktree you can create a `.kibberc` in that worktree and kibbe will pick up and merge
+with the main configuration
 
 ## Tmux integration
 
