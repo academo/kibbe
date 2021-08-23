@@ -1,6 +1,7 @@
+
 # About
 
-![ezgif-7-a5998c76bc8a](https://user-images.githubusercontent.com/227916/130441363-54002dad-4a00-43f9-a4e8-ce22f7123b9a.gif)
+![Peek 2021-08-23 13-40](https://user-images.githubusercontent.com/227916/130441509-cf3f2f57-54a0-43fb-8b22-30f1e1725935.gif)
 
 kibbe is a cli tool to ease common tasks when developing plugins for kibana.
 
