@@ -34,7 +34,7 @@ from src.util import get_valid_filename
     "--interactive",
     help="Ask questions about the new context",
     is_flag=True,
-    default=False,
+    default=True,
 )
 @click.option(
     "-B",
