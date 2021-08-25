@@ -96,6 +96,19 @@ other configuration files in your git worktrees. This make it easier to keep the
 If you want to have a custom configuration on an specific worktree you can create a `.kibberc` in that worktree and kibbe will pick up and merge
 with the main configuration
 
+## Terminal Autocomplete
+
+Kibbe offers autocomplete for some of its commands. you can enable it depending on your terminal by adding this to your
+configuration dotfile:
+
+
+### ZSH (default in Macos)
+`eval "$(_KIBBE_COMPLETE=zsh_source kibbe)"`
+
+
+### BASH
+`eval "$(_KIBBE_COMPLETE=bash_source kibbe)"`
+
 ## Tmux integration
 
 Kibbe can integrate with tmux to quickly run elasticsearch and kibana. Simply run kibbe inside an existing tmux window.
