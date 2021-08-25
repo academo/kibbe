@@ -21,7 +21,7 @@ def get_worktree_list():
     return worktrees
 
 
-def get_worktree_list_flat(incomplete=""):
+def get_worktree_list_flat(ctx, param, incomplete=""):
     final = []
     try:
         worktrees = get_worktree_list()
