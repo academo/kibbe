@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 import subprocess
 
@@ -25,10 +26,9 @@ def get_worktree_list_flat(incomplete=""):
     try:
         worktrees = get_worktree_list()
         for tree in worktrees:
-            if not incomplete or (
-                incomplete and tree["worktree"].startswith(incomplete)
-            ):
-                final.append(tree["worktree"])
+            name = os.path.basename(tree["worktree"])
+            if not incomplete or (incomplete and name.startswith(incomplete)):
+                final.append(name)
     except ValueError:
         pass
 
