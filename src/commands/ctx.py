@@ -102,6 +102,9 @@ def ctx(
             )
         )
 
+    if name.startswith("../"):
+        name = name[3:]
+
     path_name = get_valid_filename(name)
     existing_worktree = find_existing_worktree(path_name)
 
