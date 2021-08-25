@@ -4,21 +4,24 @@ import subprocess
 
 
 def get_worktree_list():
-    raw_list = subprocess.getoutput("git worktree list --porcelain")
-    worktrees = []
-    raw_list = raw_list.split("\n")
+    try:
+        raw_list = subprocess.getoutput("git worktree list --porcelain")
+        worktrees = []
+        raw_list = raw_list.split("\n")
 
-    current = {}
-    for item in raw_list:
-        if not item:
-            worktrees.append(current)
-            current = {}
-            continue
+        current = {}
+        for item in raw_list:
+            if not item:
+                worktrees.append(current)
+                current = {}
+                continue
 
-        [name, value] = item.split(" ")
-        current[name] = value
+            [name, value] = item.split(" ")
+            current[name] = value
 
-    return worktrees
+        return worktrees
+    except ValueError:
+        return []
 
 
 def get_worktree_list_flat(ctx, param, incomplete=""):
