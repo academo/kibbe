@@ -102,11 +102,11 @@ Kibbe offers autocomplete for some of its commands. you can enable it depending 
 configuration dotfile:
 
 
-### ZSH (default in Macos)
+### ZSH: Add to `~/.zshrc`  (default in Macos)
 `eval "$(_KIBBE_COMPLETE=zsh_source kibbe)"`
 
 
-### BASH
+### BASH Add to `~/.bashrc`
 `eval "$(_KIBBE_COMPLETE=bash_source kibbe)"`
 
 ## Tmux integration
