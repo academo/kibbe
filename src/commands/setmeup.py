@@ -3,9 +3,13 @@ import subprocess
 import sys
 
 import click
-import libtmux
 from termcolor import colored
-from src.tmux import get_current_window, clean_tmux_window
+from src.tmux import (
+    get_current_window,
+    clean_tmux_window,
+    is_inside_tmux,
+    setup_tmux_client,
+)
 
 
 @click.command(help="Proxy for yarn kbn bootstrap")
@@ -25,6 +29,10 @@ from src.tmux import get_current_window, clean_tmux_window
     help="If passed will pass the flush flag to ES when initializing",
 )
 def setmeup(clean, tmux, flush):
+
+    if tmux and not is_inside_tmux():
+        setup_tmux_client()
+        exit()
 
     commands = []
     if clean:
