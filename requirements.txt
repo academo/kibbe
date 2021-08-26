@@ -16,7 +16,6 @@ importlib-metadata==4.6.1
 iniconfig==1.1.1
 jeepney==0.7.0
 keyring==23.0.1
--e git+ssh://git@github.com/academo/kibbe.git@c0cd55ad92e5fd01325212289cc92aceac07c804#egg=kibbe
 libtmux==0.10.1
 mccabe==0.6.1
 msgpack==1.0.2
