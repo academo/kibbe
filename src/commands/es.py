@@ -8,7 +8,7 @@ import click
 from termcolor import colored
 
 from src.config import get_config, persist_config
-from src.util import merge_params, unparsed_to_map
+from src.util import get_valid_filename, merge_params, unparsed_to_map
 
 pathDataRe = re.compile(r"path\.data\s?=", re.IGNORECASE)
 
@@ -69,15 +69,21 @@ def es(data_dir, no_persist, e, unparsed_args, save_config, flush):
     https://github.com/academo/kibbe#configuration-file
     """
 
-    e_params = get_params(data_dir, no_persist)
+    e_params = get_eparams(data_dir, no_persist)
 
     # additional -E params
     for item in e:
         item = item.strip()
-        # ignore path.data
+
+        # ignore if passing a path.data -E param
         if pathDataRe.match(item):
             continue
-        e_params.append(item)
+
+        item = item.split("=")
+        try:
+            e_params[str(item[0])] = str(item[1]) if str(item[1]) else ""
+        except ValueError:
+            pass
 
     params = []
     config = get_config()
@@ -87,17 +93,28 @@ def es(data_dir, no_persist, e, unparsed_args, save_config, flush):
         config_params = config.items("elastic.params", raw=True)
     params = merge_params(config_params, unparsed_args)
 
+    if not no_persist and "path.data" not in e_params:
+        # not a path data passed. Will create one based on the current branch name
+        try:
+            current_branch = subprocess.getoutput("git rev-parse --abbrev-ref HEAD")
+            data_dir = "../" + get_valid_filename("kibbe-esdata-" + current_branch)
+            e_params["path.data"] = get_data_dir(data_dir, no_persist)
+        except ValueError:
+            pass
+
     if flush:
         for param in e_params:
-            if param.startswith("path.data="):
+            if param == "path.data":
                 try:
-                    dataDir = param.split("=")[1]
+                    dataDir = e_params[param]
                     click.echo(colored("Will remove data dir %s" % (dataDir), "red"))
                     rmtree(dataDir, ignore_errors=True)
                 except ValueError:
                     pass
                 finally:
                     break
+
+    e_params = normalize_eparams(e_params)
 
     if save_config:
         persist_config(
@@ -119,10 +136,10 @@ def get_command(e_params, extra_params):
     return ["node", "scripts/es", "snapshot"] + final_params + extra_params
 
 
-def get_params(data_dir, no_persist):
+def get_eparams(data_dir, no_persist):
     CONFIG_KEY = "elastic.eparams"
     config = get_config()
-    params = []
+    params = {}
     if CONFIG_KEY in config:
         for (key, value) in config.items(CONFIG_KEY, raw=True):
             # ignore path.data if this command overwrites it
@@ -132,10 +149,7 @@ def get_params(data_dir, no_persist):
                 else:
                     value = get_data_dir(value, no_persist)
 
-            if len(value) > 0:
-                params.append(str(key) + "=" + str(value))
-            else:
-                params.append(str(key))
+            params[str(key)] = str(value) if value else ""
 
     return params
 
@@ -145,3 +159,10 @@ def get_data_dir(data_dir, no_persist):
         return tempfile.mkdtemp(suffix="kibbe")
 
     return str(Path(data_dir).resolve())
+
+
+def normalize_eparams(params):
+    final = []
+    for param in params:
+        final.append("%s=%s" % (param, params[param]))
+    return final
