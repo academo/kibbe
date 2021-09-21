@@ -101,7 +101,7 @@ def find_related_plugin_folder(file):
     return str(path)
 
 
-def merge_params(config_params, unparsed_args):
+def merge_params(config_params, unparsed_args, useEqual=False):
     final_params = []
     params_map = {}
     for conf, value in config_params:
@@ -123,10 +123,17 @@ def merge_params(config_params, unparsed_args):
             if nextIsValue:
                 skip = True
 
-    for param in params_map:
-        final_params.append(param)
-        if len(params_map[param]) > 0:
-            final_params.append(params_map[param])
+    if useEqual:
+        for param in params_map:
+            if len(params_map[param]) > 0:
+                final_params.append(param + "=" + params_map[param])
+            else:
+                final_params.append(param)
+    else:
+        for param in params_map:
+            final_params.append(param)
+            if len(params_map[param]) > 0:
+                final_params.append(params_map[param])
 
     return final_params
 

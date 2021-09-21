@@ -55,7 +55,7 @@ def kibana(save_config, unparsed_args, wait):
     if "kibana.params" in config:
         config_params = config.items("kibana.params", raw=True)
 
-    params = merge_params(config_params, unparsed_args)
+    params = merge_params(config_params, unparsed_args, useEqual=True)
 
     if save_config:
         persist_config({"kibana.params": unparsed_to_map(params)})
