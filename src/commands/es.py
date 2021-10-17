@@ -6,7 +6,6 @@ import tempfile
 
 import click
 from termcolor import colored
-
 from src.config import get_config, persist_config
 from src.util import get_valid_filename, merge_params, unparsed_to_map
 
