@@ -1,17 +1,11 @@
 import subprocess
-from threading import Thread
-import os
 import sys
-import signal
-import psutil
 
 import click
-from prompt_toolkit import Application
-from prompt_toolkit.buffer import Buffer
-from prompt_toolkit.key_binding import KeyBindings
-from prompt_toolkit.layout.containers import HSplit, Window
-from prompt_toolkit.layout.controls import BufferControl, FormattedTextControl
-from prompt_toolkit.layout.layout import Layout
+import re
+import atexit
+import psutil
+import enlighten
 from termcolor import colored
 
 from src.config import get_config, persist_config
@@ -91,19 +85,93 @@ def kibana(save_config, unparsed_args, wait, alt):
         subprocess.run(command)
 
 
-kb = KeyBindings()
+def run_kibana_alt(command):
+    # command = ["node test.js"]
+
+    manager = enlighten.get_manager()
+
+    pbar = manager.counter(
+        total=100, desc="Optimizer", unit="bundles", color="blue_on_green"
+    )
+    status = manager.status_bar(
+        fields={"kibana_status": "Initializing"},
+        status_format="Kibana is {kibana_status}",
+        color="white_on_black",
+    )
+
+    process = subprocess.Popen(
+        "FORCE_COLOR=1 " + " ".join(command),
+        shell=True,
+        stdout=subprocess.PIPE,
+    )
+
+    pbar.count = int(0)
+    pbar.refresh()
+
+    if process.stdout:
+        while True:
+            # exit kibbe if the node process died
+            if process.poll() is not None or process.returncode:
+                sys.exit()
+            output = process.stdout.readline()
+            if output:
+                line = output.decode("utf-8")
+                sys.stdout.write(line)
+                parse_line(line, pbar, status)
 
 
-@kb.add("c-c")
-def exit_(event):
+optimizerProgressRe = re.compile(r"^.*?@kbn\/optimizer.*?\[(\d+)\/(\d+)\]\s.*$")
+optimizerSuccessRe = re.compile(r"^.*?success.*?kbn\/optimizer.*")
+
+kibanaServerRunning = re.compile(r".*http\.server\.Kibana.*?http server running")
+kibanaServerStatus = re.compile(r".*?status.*?\sKibana\sis\snow\s(.+)(?:\s|$)")
+
+
+def parse_line(line: str, pbar: enlighten.Counter, status: enlighten.StatusBar):
+    progressMatch = optimizerProgressRe.match(line)
+    if progressMatch:
+        current = int(progressMatch.group(1))
+        total = int(progressMatch.group(2))
+        pbar.total = total
+        pbar.count = current
+        pbar.refresh()
+        return
+    successMatch = optimizerSuccessRe.match(line)
+    if successMatch:
+        pbar.clear()
+        return
+
+    if kibanaServerRunning.match(line):
+        status.fields["kibana_status"] = "⌛ Server loading"
+        status.refresh()
+        return
+
+    kibanaStatusMatch = kibanaServerStatus.match(line)
+    if kibanaStatusMatch:
+        message = str(kibanaStatusMatch.group(1))
+        message = get_kibana_icon(message) + message
+        status.fields["kibana_status"] = message
+        status.refresh()
+        return
+
+
+def get_kibana_icon(message):
+    if "available" in message:
+        return "✅ "
+
+    if "degraded" in message:
+        return "⌛ "
+
+    return ""
+
+
+def exit_():
     """
-    Pressing Ctrl-Q will exit the user interface.
-
-    Setting a return value means: quit the event loop that drives the user
-    interface and return this value from the `Application.run()` call.
+    Makes sure that when exiting kibbe any remaninig subprocess is killed.
+    This is useful because if kibbe starts a nodejs process it might spawn
+    more sub-proceses but they will not be terminated if the parent is asked to
+    do so.
     """
-    event.app.exit()
-
     current_process = psutil.Process()
     children = current_process.children(recursive=True)
     for child in children:
@@ -112,41 +180,22 @@ def exit_(event):
         except:
             pass
 
-    sys.exit()
+
+atexit.register(exit_)
 
 
-def run_kibana_alt(command):
+"""
+const fs = require('fs');
+const lines = fs.readFileSync('output.log').toString().split('\n');
 
-    buffer = Buffer()  # Editable buffer.
+let current = 0;
 
-    main_window = Window(content=BufferControl(buffer=buffer))
-    status_window = Window(height=1, content=FormattedTextControl(text="Status Bar"))
+const int = setInterval(() => {
+  console.log(lines[current]);
+  current++;
+  if (lines[current] === undefined) {
+    clearInterval(int);
+  }
+});
 
-    root_container = HSplit([main_window, status_window])
-
-    # command = ["ls -la"]
-    layout = Layout(root_container)
-    thread = Thread(target=run_command_in_thread, args=(command, buffer), daemon=True)
-    thread.start()
-
-    app = Application(key_bindings=kb, layout=layout, full_screen=True)
-    app.run()
-    print(os.getcwd())
-
-
-def run_command_in_thread(command, buffer):
-    process = subprocess.Popen(
-        " ".join(command),
-        shell=True,
-        stdout=subprocess.PIPE,
-    )
-
-    if process.stdout:
-        while True:
-            output = process.stdout.readline()
-            if output == "" and process.poll() is not None:
-                break
-            if output:
-                buffer.insert_text(str(output.strip()))
-                buffer.insert_line_below()
-    exit()
+"""

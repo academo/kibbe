@@ -8,7 +8,14 @@ setup(
     url="https://github.com/academo/kibbe/",
     author="Esteban Beltran",
     author_email="kibbe@academo.me",
-    install_requires=["click", "termcolor", "libtmux", "requests"],
+    install_requires=[
+        "click",
+        "termcolor",
+        "libtmux",
+        "requests",
+        "psutil",
+        "enlighten",
+    ],
     entry_points={
         "console_scripts": [
             "kibbe = src.main:cli",
