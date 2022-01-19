@@ -1,3 +1,4 @@
+import re
 import configparser
 import os
 from pathlib import Path
@@ -6,6 +7,14 @@ from src.util import get_valid_filename
 import click
 from termcolor import colored
 
+class CustomConfigParser(configparser.ConfigParser):
+    """Modified ConfigParser that allow ':' in keys and only '=' as separator.
+    """
+    OPTCRE = re.compile(
+        r'(?P<option>[^=\s][^=]*)'
+        r'\s*(?P<vi>[=])\s*'
+        r'(?P<value>.*)$'
+        )
 
 def get_config_file(first=False):
 
@@ -76,7 +85,7 @@ def make_config_files(config):
 
 
 def get_config():
-    config = configparser.ConfigParser()
+    config = CustomConfigParser()
     try:
         config.optionxform = str  # type: ignore
     except ValueError:
