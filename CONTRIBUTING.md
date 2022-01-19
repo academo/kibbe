@@ -65,3 +65,15 @@ There's a handy script to automate this process in `scripts/increment-version.sh
 
 Minor release: `make minor-release`
 Major release: `make major-relase`
+
+## Problems
+
+The first time you activate the virtualenv, you may need to run the following commands to install dev dependencies:
+
+```
+pip install psutil
+python setup.py develop
+```
+
+Attempting to install development packages can result in a "SandboxViolation" error when it attempts to install psutil.
+If you install psutil first, you will avoid the error.
