@@ -37,6 +37,13 @@ this = sys.modules[__name__]
     help="Shows an alterantive kibana loading log. Based on text parsing and regex.",
 )
 @click.option(
+    "--prod",
+    "-p",
+    default=False,
+    is_flag=True,
+    help="Runs Kibana in production mode (omits the '--dev' argument).",
+)
+@click.option(
     "--save-config",
     default=False,
     is_flag=True,
@@ -46,11 +53,11 @@ this = sys.modules[__name__]
     ),
 )
 @click.argument("unparsed_args", nargs=-1, type=click.UNPROCESSED)
-def kibana(save_config, unparsed_args, wait, alt):
+def kibana(save_config, unparsed_args, wait, alt, prod):
     """
     Runs Kibana from the current clone.
 
-    You can pass the same parameters as you'd pass to `node scritps/kibana`
+    You can pass the same parameters as you'd pass to `node scripts/kibana`
 
     You can persist some parameters by using a configuration file `~/.kibbe`.
     with the [kibana.params] section.
@@ -76,7 +83,10 @@ def kibana(save_config, unparsed_args, wait, alt):
         persist_config({"kibana.params": unparsed_to_map(params)})
         exit()
 
-    command = ["node", "scripts/kibana", "--dev"] + params
+    command = ["node", "scripts/kibana"]
+    if not prod:
+        command.append("--dev")
+    command.extend(params)
     click.echo("Will run kibana search as: " + colored(" ".join(command), "yellow"))
 
     if alt:
@@ -167,7 +177,7 @@ def get_kibana_icon(message):
 
 def exit_():
     """
-    Makes sure that when exiting kibbe any remaninig subprocess is killed.
+    Makes sure that when exiting kibbe any remaining subprocess is killed.
     This is useful because if kibbe starts a nodejs process it might spawn
     more sub-proceses but they will not be terminated if the parent is asked to
     do so.
