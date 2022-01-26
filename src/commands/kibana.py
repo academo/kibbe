@@ -57,7 +57,7 @@ def kibana(save_config, unparsed_args, wait, alt, prod):
     """
     Runs Kibana from the current clone.
 
-    You can pass the same parameters as you'd pass to `node scritps/kibana`
+    You can pass the same parameters as you'd pass to `node scripts/kibana`
 
     You can persist some parameters by using a configuration file `~/.kibbe`.
     with the [kibana.params] section.
@@ -177,7 +177,7 @@ def get_kibana_icon(message):
 
 def exit_():
     """
-    Makes sure that when exiting kibbe any remaninig subprocess is killed.
+    Makes sure that when exiting kibbe any remaining subprocess is killed.
     This is useful because if kibbe starts a nodejs process it might spawn
     more sub-proceses but they will not be terminated if the parent is asked to
     do so.
