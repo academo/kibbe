@@ -80,12 +80,18 @@ def setup_tmux_client():
         if platform.system() == "Darwin":
             click.echo(colored("brew install tmux", "yellow"))
         elif platform.system() == "Linux":
-            version = platform.version().lower()
-            if "ubuntu" in version or "debian" in version:
-                click.echo(colored("sudo apt install tmux", "yellow"))
-            elif "fedora" in version:
-                click.echo(colored("sudo yum install tmux", "yellow"))
-            else:
+            try:
+                version = platform.version().lower()
+                uname = platform.uname().release.lower()
+                if "ubuntu" in version or "debian" in version:
+                    click.echo(colored("sudo apt install tmux", "yellow"))
+                elif "fedora" in version:
+                    click.echo(colored("sudo yum install tmux", "yellow"))
+                elif "manjaro" in uname or "arch" in uname:
+                    click.echo(colored("sudo pacman -S tmux", "yellow"))
+                else:
+                    click.echo("Visit https://github.com/tmux/tmux/wiki/Installing")
+            except Exception:
                 click.echo("Visit https://github.com/tmux/tmux/wiki/Installing")
 
         # no tmux detected
