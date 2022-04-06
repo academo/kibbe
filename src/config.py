@@ -7,14 +7,14 @@ from src.util import get_valid_filename
 import click
 from termcolor import colored
 
+
 class CustomConfigParser(configparser.ConfigParser):
-    """Modified ConfigParser that allow ':' in keys and only '=' as separator.
-    """
+    """Modified ConfigParser that allow ':' in keys and only '=' as separator."""
+
     OPTCRE = re.compile(
-        r'(?P<option>[^=\s][^=]*)'
-        r'\s*(?P<vi>[=])\s*'
-        r'(?P<value>.*)$'
-        )
+        r"(?P<option>[^=\s][^=]*)" r"\s*(?P<vi>[=])\s*" r"(?P<value>.*)$"
+    )
+
 
 def get_config_file(first=False):
 
@@ -96,6 +96,15 @@ def get_config():
         click.echo(colored("Error reading your configuration file.", "red"))
         pass
     return config
+
+
+def get_kibbe_config(option: str = ""):
+    config = get_config()
+
+    if config.has_option("kibbe", option):
+        return config.get("kibbe", option)
+
+    return None
 
 
 def persist_config(config_map):

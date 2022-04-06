@@ -8,7 +8,7 @@ import psutil
 import enlighten
 from termcolor import colored
 
-from src.config import get_config, persist_config
+from src.config import get_config, get_kibbe_config, persist_config
 from src.util import merge_params, unparsed_to_map
 from src.util import wait_for_elastic_search
 
@@ -71,9 +71,9 @@ def kibana(save_config, unparsed_args, wait, alt, prod):
             colored("Waiting for elasticsearch in port 9200. Timeout in 60s", "blue")
         )
         wait_for_elastic_search()
-
     config_params = []
     config = get_config()
+
     if "kibana.params" in config:
         config_params = config.items("kibana.params", raw=True)
 
@@ -89,7 +89,7 @@ def kibana(save_config, unparsed_args, wait, alt, prod):
     command.extend(params)
     click.echo("Will run kibana search as: " + colored(" ".join(command), "yellow"))
 
-    if alt:
+    if alt or get_kibbe_config("kibana-alt-mode"):
         run_kibana_alt(command)
     else:
         subprocess.run(command)
@@ -137,7 +137,7 @@ kibanaServerRunning = re.compile(r".*http\.server\.Kibana.*?http server running"
 kibanaServerStatus = re.compile(r".*?status.*?\sKibana\sis\snow\s(.+)(?:\s|$)")
 
 
-def parse_line(line: str, pbar: enlighten.Counter, status: enlighten.StatusBar):
+def parse_line(line: str, pbar, status: enlighten.StatusBar):
     progressMatch = optimizerProgressRe.match(line)
     if progressMatch:
         current = int(progressMatch.group(1))
@@ -187,7 +187,7 @@ def exit_():
     for child in children:
         try:
             child.terminate()
-        except:
+        except Exception:
             pass
 
 
