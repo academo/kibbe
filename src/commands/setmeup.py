@@ -72,7 +72,7 @@ def start_kibana(kibana_pane):
 
     kibana_pane.send_keys("cd %s" % current_dir)
     kibana_pane.send_keys("nvm use")
-    kibana_pane.send_keys("%s kibana --wait --alt" % kibbe_command)
+    kibana_pane.send_keys("%s kibana --wait" % kibbe_command)
 
 
 def start_es(es_pane, flush=False):

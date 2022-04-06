@@ -18,6 +18,11 @@ license=trial
 [kibana.params]
 no-base-path=
 
+## Example of kibbe own section config
+[kibbe]
+# "alt mode" shows an optimizer progress bar when you start kibana
+kibana-alt-mode = true
+
 # Any section starting with the `file-` prefix will be
 # used to create a file, using the string after `file-` as the
 # name and the key `content` as the content.
