@@ -14,6 +14,14 @@ from src.config import get_kibbe_config
     "--watch", "-w", default=False, is_flag=True, help="Run jest in watch mode"
 )
 def jest(testfile, watch):
+    """
+    Helper for kibana's jest runner script.
+
+    If TESTFILE is passed. It will run jest for it.
+
+    If TESTFILE is not passed it will prompt you to select a test file
+    from `git status`
+    """
     if testfile:
         run_for_file(testfile, watch)
         return
