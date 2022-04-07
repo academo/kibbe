@@ -168,9 +168,6 @@ def wait_for_elastic_search():
                 break
             time.sleep(1)
 
-    # progress = click.progressbar(length=total, label="Waiting for elasticsearch")
-    # while timeout >= 0:
-
     if current <= 0:
         return True
     else:

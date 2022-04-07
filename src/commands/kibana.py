@@ -9,7 +9,7 @@ import enlighten
 from termcolor import colored
 
 from src.config import get_config, get_kibbe_config, persist_config
-from src.util import merge_params, unparsed_to_map
+from src.util import is_es_running, merge_params, unparsed_to_map
 from src.util import wait_for_elastic_search
 
 this = sys.modules[__name__]
@@ -66,7 +66,7 @@ def kibana(save_config, unparsed_args, wait, alt, prod):
     https://github.com/academo/kibbe#configuration-file
     """
 
-    if wait:
+    if wait and not is_es_running():
         click.echo(
             colored("Waiting for elasticsearch in port 9200. Timeout in 60s", "blue")
         )
