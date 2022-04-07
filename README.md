@@ -13,6 +13,7 @@ kibbe is a cli tool to ease common tasks when developing plugins for kibana.
 * Run fast checks for your code before committing
 * Manage git worktree paths
 * Custom configuration across kibana clones or git worktrees
+* Run jest easily for unit tests
 * Discover tools and helpers you might not know
 * More coming: [open an issue](https://github.com/academo/kibbe/issues/new) with your suggestions
 
@@ -20,10 +21,9 @@ kibbe is a cli tool to ease common tasks when developing plugins for kibana.
 
 # Installing
 
-There are 3 ways to install kibbe:
+There are 2 ways to install kibbe:
 
 * via PIP (recommended) `pip install kibbe --upgrade`
-* Downloading the binary
 * Building it
 
 ## Via PIP
@@ -43,14 +43,6 @@ To upgrade
 
 Note: It might be possible you need to run pip with sudo in mac.
 
-## Download the binary
-
-- Download the [latest release](https://github.com/academo/kibbe/releases) from this repository.
-- Give it running permissions `chmod +x kibbe`
-- Add it to your path (e.g. `cp kibbe .local/bin`)
-
-MacOS users dowloading the release [see this](docs/mac_issue.md)
-
 ## Building it yourself
 
 You can build kibbe yourself, follow the instructions in the [contributing](CONTRIBUTING.md) guide.
@@ -65,7 +57,7 @@ you can run `--help` on any subcommand to get more information about arguments, 
 
 e.g.:
 
-`kibbe check --help`
+`kibbe kibana --help`
 
 ## Configuration file
 
