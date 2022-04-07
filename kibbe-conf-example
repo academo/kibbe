@@ -22,6 +22,8 @@ no-base-path=
 [kibbe]
 # "alt mode" shows an optimizer progress bar when you start kibana
 kibana-alt-mode = true
+# jest-max-workers=2
+# default-es-data=./es-data-root
 
 # Any section starting with the `file-` prefix will be
 # used to create a file, using the string after `file-` as the
