@@ -3,16 +3,12 @@ import sys
 
 import click
 import re
-import atexit
-import psutil
 import enlighten
 from termcolor import colored
 
 from src.config import get_config, get_kibbe_config, persist_config
 from src.util import is_es_running, merge_params, unparsed_to_map
 from src.util import wait_for_elastic_search
-
-this = sys.modules[__name__]
 
 
 @click.command(
@@ -173,39 +169,3 @@ def get_kibana_icon(message):
         return "⌛ "
 
     return ""
-
-
-def exit_():
-    """
-    Makes sure that when exiting kibbe any remaining subprocess is killed.
-    This is useful because if kibbe starts a nodejs process it might spawn
-    more sub-proceses but they will not be terminated if the parent is asked to
-    do so.
-    """
-    current_process = psutil.Process()
-    children = current_process.children(recursive=True)
-    for child in children:
-        try:
-            child.terminate()
-        except Exception:
-            pass
-
-
-atexit.register(exit_)
-
-
-"""
-const fs = require('fs');
-const lines = fs.readFileSync('output.log').toString().split('\n');
-
-let current = 0;
-
-const int = setInterval(() => {
-  console.log(lines[current]);
-  current++;
-  if (lines[current] === undefined) {
-    clearInterval(int);
-  }
-});
-
-"""

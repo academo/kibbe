@@ -1,6 +1,8 @@
-from src.config import get_config, make_config_files
 import click
+import atexit
+import psutil
 
+from src.config import get_config, make_config_files
 from src.commands.check import check
 from src.commands.config import config
 from src.commands.ctx import ctx
@@ -40,3 +42,22 @@ cli.add_command(fleet)
 cli.add_command(ctx)
 cli.add_command(config)
 cli.add_command(jest)
+
+
+def exit_():
+    """
+    Makes sure that when exiting kibbe any remaining subprocess is killed.
+    This is useful because if kibbe starts a nodejs process it might spawn
+    more sub-proceses but they will not be terminated if the parent is asked to
+    do so.
+    """
+    current_process = psutil.Process()
+    children = current_process.children(recursive=True)
+    for child in children:
+        try:
+            child.terminate()
+        except Exception:
+            pass
+
+
+atexit.register(exit_)
