@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 import re
 from shutil import rmtree
@@ -6,7 +7,7 @@ import tempfile
 
 import click
 from termcolor import colored
-from src.config import get_config, persist_config
+from src.config import get_config, get_kibbe_config, persist_config
 from src.util import get_valid_filename, merge_params, unparsed_to_map
 
 pathDataRe = re.compile(r"path\.data\s?=", re.IGNORECASE)
@@ -87,6 +88,9 @@ def es(data_dir, no_persist, e, unparsed_args, save_config, flush):
     params = []
     config = get_config()
 
+    default_es_data = get_kibbe_config("default-es-data")
+    default_es_data = default_es_data if default_es_data else "../kibbe-es-data"
+
     config_params = []
     if "elastic.params" in config:
         config_params = config.items("elastic.params", raw=True)
@@ -96,7 +100,9 @@ def es(data_dir, no_persist, e, unparsed_args, save_config, flush):
         # not a path data passed. Will create one based on the current branch name
         try:
             current_branch = subprocess.getoutput("git rev-parse --abbrev-ref HEAD")
-            data_dir = "../" + get_valid_filename("kibbe-esdata-" + current_branch)
+            data_dir = os.path.join(
+                default_es_data, get_valid_filename("kibbe-esdata-" + current_branch)
+            )
             e_params["path.data"] = get_data_dir(data_dir, no_persist)
         except ValueError:
             pass
