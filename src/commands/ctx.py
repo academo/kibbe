@@ -12,7 +12,7 @@ from src.util import get_valid_filename
 
 @click.command()
 @click.argument(
-    "name", type=click.STRING, autocompletion=get_worktree_list_flat, required=False
+    "name", type=click.STRING, shell_complete=get_worktree_list_flat, required=False
 )
 @click.option(
     "--branch",
