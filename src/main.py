@@ -12,6 +12,7 @@ from src.commands.kibana import kibana
 from src.commands.setlicense import setlicense
 from src.commands.setmeup import setmeup
 from src.commands.jest import jest
+from src.commands.checkout import checkout
 from src.util import force_kibana_root
 
 
@@ -42,6 +43,7 @@ cli.add_command(fleet)
 cli.add_command(ctx)
 cli.add_command(config)
 cli.add_command(jest)
+cli.add_command(checkout)
 
 
 def exit_():
